@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epsilon Academics | Elevate Your Learning</title>
+    <link rel="icon" href="icon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, #e8f5e9 0%, #ffffff 50%, #f1f8f1 100%);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(46, 125, 50, 0.05) 100%);
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-900 overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 px-6 py-4 transition-all duration-300 bg-white/70 backdrop-blur-md border-b border-emerald-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-emerald-600 p-2 rounded-lg">
+                    <i data-lucide="graduation-cap" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="text-xl font-800 tracking-tight text-emerald-900 uppercase">Epsilon<span class="font-light">Academics</span></span>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+                <a href="#features" class="hover:text-emerald-600 transition-colors">Features</a>
+                <a href="#tools" class="hover:text-emerald-600 transition-colors">Tools</a>
+                <a href="./site" class="bg-emerald-600 text-white px-6 py-2.5 rounded-full hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200 active:scale-95">Launch Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 px-6 hero-gradient overflow-hidden">
+        <div class="blob -top-20 -right-20"></div>
+        <div class="blob bottom-0 -left-20"></div>
+        
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-semibold animate-bounce">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    All-in-one Student OS
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-extrabold leading-[1.1] text-slate-900">
+                    Master Your <br/>
+                    <span class="gradient-text">Academic Journey</span>
+                </h1>
+                <p class="text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                    Epsilon Academics provides the precision tools you need to track grades, manage assignments, and visualize your progress. Designed for students who aim higher.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="./site.html" class="group bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 flex items-center justify-center gap-2 active:scale-95">
+                        Start Learning Now
+                        <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <a href="#features" class="bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                        View Features
+                    </a>
+                </div>
+                <div class="flex items-center gap-6 justify-center lg:justify-start pt-4">
+                    <div class="flex -space-x-3">
+                        <div class="w-10 h-10 rounded-full border-2 border-white bg-emerald-100 flex items-center justify-center text-xs font-bold">JD</div>
+                        <div class="w-10 h-10 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-xs font-bold">AS</div>
+                        <div class="w-10 h-10 rounded-full border-2 border-white bg-purple-100 flex items-center justify-center text-xs font-bold">MK</div>
+                    </div>
+                    <p class="text-sm text-slate-500 font-medium">Joined by 10+ students this semester</p>
+                </div>
+            </div>
+
+            <div class="relative lg:block">
+                <div class="relative z-10 animate-float">
+                    <div class="glass-card p-4 rounded-3xl shadow-2xl border border-white/50">
+                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=1000" alt="Dashboard Preview" class="rounded-2xl shadow-inner">
+                        <!-- Floating UI Elements -->
+                        <div class="absolute -bottom-6 -left-6 glass-card p-6 rounded-2xl shadow-xl border border-emerald-100 hidden sm:block">
+                            <div class="flex items-center gap-4">
+                                <div class="p-3 bg-emerald-100 rounded-xl text-emerald-600">
+                                    <i data-lucide="trending-up" class="w-6 h-6"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Current GPA</p>
+                                    <p class="text-2xl font-extrabold text-slate-800">3.92</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Decorative Elements -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-emerald-50/50 rounded-full -z-10 blur-3xl"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 px-6 bg-slate-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-20 space-y-4">
+                <h2 class="text-sm font-bold text-emerald-600 uppercase tracking-[0.2em]">The Ecosystem</h2>
+                <p class="text-4xl font-extrabold text-slate-900">Everything you need to succeed in one place.</p>
+                <p class="text-slate-600 text-lg">We've built the ultimate student toolkit, eliminating the need for dozens of disjointed apps.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="layout-dashboard" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900">Smart Grade Planner</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">Visualize your academic performance with dynamic charts and predict your final grades with our projection engine.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-2 text-sm text-slate-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> GPA Forecasting</li>
+                        <li class="flex items-center gap-2 text-sm text-slate-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> Subject Breakdown</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="calendar" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900">Assignment Hub</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">Never miss a deadline again. Manage your tasks, homework, and projects with an intuitive priority-based system.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-2 text-sm text-slate-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500"></i> Deadline Tracking</li>
+                        <li class="flex items-center gap-2 text-sm text-slate-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500"></i> Priority Sorting</li>
+                    </ul>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 hover:-translate-y-2">
+                    <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="calculator" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-slate-900">Scientific Toolkit</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">Integrated calculators and unit converters designed for science, math, and engineering students.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-2 text-sm text-slate-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-purple-500"></i> Multi-unit Conversion</li>
+                        <li class="flex items-center gap-2 text-sm text-slate-500"><i data-lucide="check-circle-2" class="w-4 h-4 text-purple-500"></i> Instant Calculations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-20 px-6 bg-emerald-900 text-white relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <div class="absolute top-10 left-10 w-64 h-64 border-4 border-white rounded-full"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 border-4 border-white rounded-full"></div>
+        </div>
+        <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+            <div class="space-y-2">
+                <p class="text-4xl font-extrabold">98%</p>
+                <p class="text-emerald-200 text-sm font-medium uppercase tracking-widest">User Satisfaction</p>
+            </div>
+            <div class="space-y-2">
+                <p class="text-4xl font-extrabold">5+</p>
+                <p class="text-emerald-200 text-sm font-medium uppercase tracking-widest">Tasks Completed</p>
+            </div>
+            <div class="space-y-2">
+                <p class="text-4xl font-extrabold">5</p>
+                <p class="text-emerald-200 text-sm font-medium uppercase tracking-widest">Average Rating</p>
+            </div>
+            <div class="space-y-2">
+                <p class="text-4xl font-extrabold">24/7</p>
+                <p class="text-emerald-200 text-sm font-medium uppercase tracking-widest">Data Storage</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 px-6 relative">
+        <div class="max-w-5xl mx-auto glass-card rounded-[3rem] p-12 md:p-20 text-center border border-emerald-100 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-emerald-100/50 rounded-full blur-3xl"></div>
+            <div class="relative z-10 space-y-8">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+                    Ready to transform your <br/>academic life?
+                </h2>
+                <p class="text-slate-600 text-lg max-w-2xl mx-auto">
+                    Join thousands of students who have already optimized their study workflow with Epsilon Academics. Free to use, forever.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                    <a href="./site.html" class="bg-emerald-600 text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 active:scale-95">
+                        Get Started - It's Free
+                    </a>
+                    <a href="#" class="bg-slate-900 text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-slate-800 transition-all shadow-xl active:scale-95">
+                        Sign In
+                    </a>
+                </div>
+                <p class="text-sm text-slate-400 font-medium italic">No credit card required. No hidden fees.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-2">
+                <div class="bg-emerald-600 p-1.5 rounded-lg">
+                    <i data-lucide="graduation-cap" class="text-white w-5 h-5"></i>
+                </div>
+                <span class="text-lg font-800 tracking-tight text-emerald-900 uppercase">Epsilon<span class="font-light">Academics</span></span>
+            </div>
+            <p class="text-slate-500 text-sm">
+                &copy; 2023 Epsilon Academics. All rights reserved. Designed for excellence.
+            </p>
+            <div class="flex gap-6">
+                <a href="#" class="text-slate-400 hover:text-emerald-600 transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                <a href="#" class="text-slate-400 hover:text-emerald-600 transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                <a href="#" class="text-slate-400 hover:text-emerald-600 transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Scroll reveal animation
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('py-3', 'shadow-sm');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.remove('py-3', 'shadow-sm');
+                nav.classList.add('py-4');
+            }
+        });
+    </script>
+</body>
+</html>
