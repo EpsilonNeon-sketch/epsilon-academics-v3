@@ -1,0 +1,4918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epsilon Academics - Learning Tools for Students</title>
+    <link rel="icon" href="./icon.png">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --pale-green: #e8f5e9;
+            --dark-green: #1b5e20;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+            --text-color: #212121;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Dialog Styles */
+        dialog {
+            padding: 20px;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 600px;
+            background-color: var(--white);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        dialog.large {
+            max-width: 900px;
+        }
+
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .dialog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .dialog-header h2 {
+            color: var(--primary-green);
+        }
+
+        .close-dialog {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            padding: 5px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .close-dialog:hover {
+            background-color: var(--light-gray);
+        }
+
+        .dialog-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .dialog-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .dialog-form .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .dialog-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .dialog-form input, .dialog-form textarea, .dialog-form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .dialog-form input:focus, .dialog-form textarea:focus, .dialog-form select:focus {
+            outline: none;
+            border-color: var(--light-green);
+        }
+
+        .dialog-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .dialog-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* User Profile Styles */
+        .user-profile {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        .user-details {
+            font-size: 0.9rem;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .user-email {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Theme Selector Styles */
+        .theme-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .theme-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .theme-option:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-option.active {
+            border-color: var(--dark-gray);
+        }
+
+        .theme-green {
+            background-color: #4caf50;
+        }
+
+        .theme-blue {
+            background-color: #2196f3;
+        }
+
+        .theme-purple {
+            background-color: #9c27b0;
+        }
+
+        .theme-red {
+            background-color: #f44336;
+        }
+
+        .theme-teal {
+            background-color: #009688;
+        }
+
+        .theme-indigo {
+            background-color: #3f51b5;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-green);
+            color: var(--white);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-item:hover {
+            background-color: var(--dark-green);
+        }
+
+        .nav-item.active {
+            background-color: var(--dark-green);
+            border-left: 4px solid var(--white);
+        }
+
+        .nav-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-header {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header h2 {
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Homepage Styles */
+        .hero {
+            background: linear-gradient(135deg, var(--light-green), var(--primary-green));
+            color: var(--white);
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 20px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--light-green);
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        /* Learn with Epsilon Styles */
+        .learn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .learn-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .learn-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .learn-card-image {
+            height: 160px;
+            background-color: var(--pale-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .learn-card-image i {
+            font-size: 3rem;
+            color: var(--primary-green);
+        }
+
+        .learn-card-content {
+            padding: 20px;
+        }
+
+        .learn-card-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .learn-card-description {
+            color: var(--dark-gray);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .learn-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .learn-card-tag {
+            background-color: var(--light-green);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Calculator and Converter Styles */
+        .tool-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .tool-section {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .tool-section h3 {
+            color: var(--primary-green);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--pale-green);
+        }
+
+        .calc-display {
+            background-color: var(--pale-green);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: right;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            min-height: 50px;
+        }
+
+        .calc-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .calc-btn {
+            padding: 15px;
+            background-color: var(--light-green);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .calc-btn:hover {
+            background-color: var(--primary-green);
+        }
+
+        .calc-btn.operator {
+            background-color: var(--primary-green);
+        }
+
+        .calc-btn.clear {
+            background-color: var(--dark-green);
+        }
+
+        .converter-group {
+            margin-bottom: 15px;
+        }
+
+        .converter-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark-gray);
+        }
+
+        .converter-group select, .converter-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background-color: var(--light-green);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-secondary {
+            background-color: var(--medium-gray);
+            color: var(--dark-gray);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+
+        /* Institution Styles */
+        .institution-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .institution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .institution-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .institution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .institution-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .institution-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        .institution-author {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        .institution-badge {
+            background-color: var(--light-green);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .institution-description {
+            color: var(--text-color);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .institution-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .institution-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .institution-stat i {
+            color: var(--primary-green);
+        }
+
+        /* Users Page Styles */
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .user-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .user-card-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--light-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: var(--white);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-card-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        .user-card-email {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            margin-bottom: 10px;
+        }
+
+        .user-card-details {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+            margin-bottom: 15px;
+        }
+
+        /* Classes Styles */
+        .classes-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .classes-list {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .class-item {
+            background-color: var(--pale-green);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .class-item:hover {
+            transform: translateX(5px);
+        }
+
+        .class-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .class-name {
+            font-weight: bold;
+            color: var(--primary-green);
+        }
+
+        .class-badge {
+            background-color: var(--light-green);
+            color: var(--white);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .class-details {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        /* Chat Styles */
+        .chat-container {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            background-color: var(--pale-green);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .chat-header h3 {
+            color: var(--primary-green);
+            margin: 0;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 10px;
+            max-width: 80%;
+        }
+
+        .chat-message.own {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .chat-message-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--light-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .chat-message-content {
+            background-color: var(--light-gray);
+            padding: 10px 15px;
+            border-radius: 15px;
+        }
+
+        .chat-message.own .chat-message-content {
+            background-color: var(--pale-green);
+        }
+
+        .chat-message-author {
+            font-weight: bold;
+            color: var(--primary-green);
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .chat-message-text {
+            line-height: 1.4;
+        }
+
+        .chat-message-time {
+            font-size: 0.7rem;
+            color: var(--dark-gray);
+            margin-top: 5px;
+        }
+
+        .chat-input-container {
+            padding: 15px 20px;
+            border-top: 1px solid var(--medium-gray);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 20px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .chat-attachment-btn {
+            background: none;
+            border: none;
+            color: var(--dark-gray);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .chat-attachment-btn:hover {
+            background-color: var(--light-gray);
+        }
+
+        .chat-send-btn {
+            background-color: var(--light-green);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .chat-send-btn:hover {
+            background-color: var(--primary-green);
+        }
+
+        .chat-attachment {
+            background-color: var(--pale-green);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .chat-attachment i {
+            color: var(--primary-green);
+        }
+
+        /* User Invitation Dialog Styles */
+        .user-invite-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .user-invite-filters {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .user-invite-search {
+            grid-column: span 3;
+            margin-bottom: 10px;
+        }
+
+        .user-invite-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background-color: var(--light-gray);
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+
+        .user-invite-item:hover {
+            background-color: var(--pale-green);
+        }
+
+        .user-invite-item.selected {
+            background-color: var(--pale-green);
+            border: 1px solid var(--light-green);
+        }
+
+        .user-invite-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        .user-invite-info {
+            flex: 1;
+        }
+
+        .user-invite-name {
+            font-weight: bold;
+            color: var(--primary-green);
+        }
+
+        .user-invite-details {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+        }
+
+        .user-invite-checkbox {
+            margin-left: 10px;
+        }
+
+        /* Translator Styles */
+        .translator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .language-selector select {
+            padding: 8px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            width: 45%;
+            font-size: 1rem;
+        }
+
+        .translate-btn {
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .translate-btn:hover {
+            background-color: var(--pale-green);
+        }
+
+        .text-area {
+            width: 100%;
+            min-height: 200px;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            resize: vertical;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .text-area:focus {
+            outline: none;
+            border-color: var(--light-green);
+        }
+
+        /* Work Manager Styles */
+        .work-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .work-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .work-form .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .work-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .work-form input, .work-form select, .work-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .work-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .work-item {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .work-item-content {
+            flex: 1;
+        }
+
+        .work-item-title {
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        .work-item-details {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        .work-item-deadline {
+            background-color: var(--light-green);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: var(--white);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Grade Planner Styles */
+        .grade-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .grade-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .grade-form .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .grade-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .grade-form input, .grade-form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .grades-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .grade-item {
+            background-color: var(--pale-green);
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .grade-item-subject {
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        .grade-item-score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark-green);
+        }
+
+        .chart-container {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .learning-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .learning-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .learning-form .form-group.full-width {
+            grid-column: span 2;
+        }
+        img {
+            border-radius: 20px;
+            box-shadow: #212121 3px 3px 6px;
+        }
+        .learning-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .learning-form input, .learning-form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .learning-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .learning-item {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .learning-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .learning-item-title {
+            font-weight: bold;
+            color: var(--primary-green);
+        }
+
+        .difficulty-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--white);
+        }
+
+        .difficulty-easy {
+            background-color: #4caf50;
+        }
+
+        .difficulty-medium {
+            background-color: #ff9800;
+        }
+
+        .difficulty-hard {
+            background-color: #f44336;
+        }
+
+        /* Community/Posts Styles */
+        .post-form {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-form h3 {
+            color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+
+        .post-form textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            resize: vertical;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .post-form textarea:focus {
+            outline: none;
+            border-color: var(--light-green);
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-label {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .file-input-label:hover {
+            background-color: var(--medium-gray);
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .attached-files {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .attached-file {
+            background-color: var(--pale-green);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .posts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        .post-author {
+            font-weight: bold;
+            color: var(--primary-green);
+        }
+
+        .post-time {
+            font-size: 0.8rem;
+            color: var(--dark-gray);
+        }
+
+        .post-content {
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .post-attachments {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .post-attachment {
+            max-width: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .post-attachment img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .post-attachment video {
+            width: 100%;
+            height: auto;
+        }
+
+        .post-attachment audio {
+            width: 100%;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .like-btn {
+            background: none;
+            border: none;
+            color: var(--dark-gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .like-btn:hover {
+            background-color: var(--light-gray);
+        }
+
+        .like-btn.liked {
+            color: #f44336;
+        }
+
+        .comments-section {
+            margin-top: 15px;
+        }
+
+        .comments-section h4 {
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 20px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .comment {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .comment-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--light-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: var(--primary-green);
+            font-size: 0.9rem;
+        }
+
+        .comment-text {
+            margin: 5px 0;
+        }
+
+        .comment-time {
+            font-size: 0.7rem;
+            color: var(--dark-gray);
+        }
+
+        /* Quiz Styles */
+        .quiz-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-search input, .quiz-search select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .quiz-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .quiz-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        .quiz-author {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        .quiz-badge {
+            background-color: var(--light-green);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .quiz-description {
+            color: var(--text-color);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .quiz-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid var(--medium-gray);
+            margin-bottom: 15px;
+        }
+
+        .quiz-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .quiz-stat i {
+            color: var(--primary-green);
+        }
+
+        /* Quiz Creation Dialog */
+        .quiz-creation-container {
+            margin-bottom: 20px;
+        }
+
+        .quiz-questions-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .quiz-question-item {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .quiz-question-number {
+            font-weight: bold;
+            color: var(--primary-green);
+        }
+
+        .quiz-question-text {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .quiz-answers-container {
+            margin-left: 20px;
+        }
+
+        .quiz-answer-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .quiz-answer-text {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            margin-right: 10px;
+            font-size: 1rem;
+        }
+
+        .quiz-answer-correct {
+            margin-left: 10px;
+        }
+
+        .add-answer-btn {
+            background: none;
+            border: none;
+            color: var(--primary-green);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .remove-question-btn {
+            background: none;
+            border: none;
+            color: #f44336;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Quiz Taking Dialog Styles */
+        .quiz-progress {
+            height: 10px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .quiz-progress-bar {
+            height: 100%;
+            background-color: var(--light-green);
+            transition: width 0.3s ease;
+        }
+
+        .quiz-question-counter {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--dark-gray);
+        }
+
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+
+        .quiz-question-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-green);
+        }
+
+        .quiz-answers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-answer {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quiz-answer:hover {
+            background-color: var(--pale-green);
+        }
+
+        .quiz-answer.selected {
+            background-color: var(--pale-green);
+            border: 1px solid var(--light-green);
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .quiz-results {
+            text-align: center;
+        }
+
+        .quiz-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+
+        .quiz-message {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .quiz-review {
+            text-align: left;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .quiz-review-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .quiz-review-item.correct {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--light-green);
+        }
+
+        .quiz-review-item.incorrect {
+            background-color: rgba(244, 67, 54, 0.1);
+            border-left: 4px solid #f44336;
+        }
+
+        /* Settings Styles */
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .settings-section h3 {
+            color: var(--primary-green);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        /* Mobile Responsive */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background-color: var(--primary-green);
+            color: var(--white);
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .tool-container,
+            .classes-container,
+            .translator-container {
+                grid-template-columns: 1fr;
+            }
+
+            .dialog-form .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .institution-grid,
+            .users-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-invite-filters {
+                grid-template-columns: 1fr;
+            }
+
+            .user-invite-search {
+                grid-column: span 1;
+            }
+            
+            .learn-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Account Creation Dialog -->
+    <dialog id="accountDialog">
+        <div class="dialog-header">
+            <h2>Create Account</h2>
+            <button class="close-dialog" onclick="closeAccountDialog()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form class="dialog-form" id="accountForm">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" min="7" max="100" required>
+            </div>
+            <div class="form-group">
+                <label for="grade">Grade</label>
+                <select id="grade" required>
+                    <option value="7">Grade 7</option>
+                    <option value="8">Grade 8</option>
+                    <option value="9">Grade 9</option>
+                </select>
+            </div>
+            <div class="form-group full-width">
+                <label for="interests">Interests</label>
+                <textarea id="interests" placeholder="Tell us about your interests..."></textarea>
+            </div>
+            <div class="dialog-actions full-width">
+                <button type="button" class="btn" onclick="closeAccountDialog()">Cancel</button>
+                <button type="submit" class="btn">Create Account</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Login Dialog -->
+    <dialog id="loginDialog">
+        <div class="dialog-header">
+            <h2>Login</h2>
+            <button class="close-dialog" onclick="closeLoginDialog()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form class="dialog-form" id="loginForm">
+            <div class="form-group full-width">
+                <label for="loginUsername">Username</label>
+                <input type="text" id="loginUsername" required>
+            </div>
+            <div class="form-group full-width">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" required>
+            </div>
+            <div class="dialog-actions full-width">
+                <button type="button" class="btn" onclick="closeLoginDialog()">Cancel</button>
+                <button type="submit" class="btn">Login</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Institution Creation Dialog -->
+    <dialog id="institutionDialog">
+        <div class="dialog-header">
+            <h2>Create Institution</h2>
+            <button class="close-dialog" onclick="closeInstitutionDialog()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form class="dialog-form" id="institutionForm">
+            <div class="form-group full-width">
+                <label for="institutionName">Institution Name</label>
+                <input type="text" id="institutionName" required>
+            </div>
+            <div class="form-group">
+                <label for="institutionType">Type</label>
+                <select id="institutionType" required>
+                    <option value="School">School</option>
+                    <option value="College">College</option>
+                    <option value="University">University</option>
+                    <option value="Training Center">Training Center</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="minGrade">Minimum Grade</label>
+                <select id="minGrade" required>
+                    <option value="1">Grade 1</option>
+                    <option value="7">Grade 7</option>
+                    <option value="8">Grade 8</option>
+                    <option value="9">Grade 9</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="maxGrade">Maximum Grade</label>
+                <select id="maxGrade" required>
+                    <option value="7">Grade 7</option>
+                    <option value="8">Grade 8</option>
+                    <option value="9">Grade 9</option>
+                    <option value="12">Grade 12</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="minAge">Minimum Age</label>
+                <input type="number" id="minAge" min="5" max="25" required>
+            </div>
+            <div class="form-group">
+                <label for="maxAge">Maximum Age</label>
+                <input type="number" id="maxAge" min="10" max="30" required>
+            </div>
+            <div class="form-group full-width">
+                <label for="institutionDescription">Description</label>
+                <textarea id="institutionDescription" placeholder="Describe your institution..."></textarea>
+            </div>
+            <div class="dialog-actions full-width">
+                <button type="button" class="btn btn-secondary" onclick="closeInstitutionDialog()">Cancel</button>
+                <button type="submit" class="btn">Create Institution</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Class Creation Dialog -->
+    <dialog id="classDialog">
+        <div class="dialog-header">
+            <h2>Create Class</h2>
+            <button class="close-dialog" onclick="closeClassDialog()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form class="dialog-form" id="classForm">
+            <div class="form-group full-width">
+                <label for="className">Class Name</label>
+                <input type="text" id="className" required>
+            </div>
+            <div class="form-group">
+                <label for="classSubject">Subject</label>
+                <select id="classSubject" required>
+                    <option value="Math">Math</option>
+                    <option value="Science">Science</option>
+                    <option value="English">English</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                    <option value="Art">Art</option>
+                    <option value="Music">Music</option>
+                    <option value="Physical Education">Physical Education</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="classGrade">Grade Level</label>
+                <select id="classGrade" required>
+                    <option value="7">Grade 7</option>
+                    <option value="8">Grade 8</option>
+                    <option value="9">Grade 9</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="maxStudents">Maximum Students</label>
+                <input type="number" id="maxStudents" min="1" max="100" value="30" required>
+            </div>
+            <div class="form-group">
+                <label for="classSchedule">Schedule</label>
+                <input type="text" id="classSchedule" placeholder="e.g., Mon-Wed-Fri 9:00 AM">
+            </div>
+            <div class="form-group full-width">
+                <label for="classDescription">Description</label>
+                <textarea id="classDescription" placeholder="Describe the class..."></textarea>
+            </div>
+            <div class="dialog-actions full-width">
+                <button type="button" class="btn btn-secondary" onclick="closeClassDialog()">Cancel</button>
+                <button type="submit" class="btn">Create Class</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Class Chat Dialog -->
+    <dialog id="classChatDialog" class="large">
+        <div class="dialog-header">
+            <h2 id="classChatTitle">Class Chat</h2>
+            <button class="close-dialog" onclick="closeClassChatDialog()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-container">
+            <div class="chat-messages" id="classChatMessages">
+                <!-- Messages will be added here -->
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="classChatInput" placeholder="Type a message...">
+                <button class="chat-attachment-btn" onclick="attachChatFile()">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+                <button class="chat-send-btn" onclick="sendClassMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <input type="file" id="chatFileInput" style="display: none;" onchange="handleChatFile(event)">
+    </dialog>
+
+    <!-- User Invitation Dialog -->
+    <dialog id="userInviteDialog" class="large">
+        <div class="dialog-header">
+            <h2>Invite Users to Class</h2>
+            <button class="close-dialog" onclick="closeUserInviteDialog()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="user-invite-filters">
+            <div class="user-invite-search">
+                <input type="text" id="userInviteSearch" placeholder="Search by name..." onkeyup="filterInviteUsers()">
+            </div>
+            <select id="ageFilter" onchange="filterInviteUsers()">
+                <option value="">All Ages</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+            </select>
+            <select id="gradeFilter" onchange="filterInviteUsers()">
+                <option value="">All Grades</option>
+                <option value="7">Grade 7</option>
+                <option value="8">Grade 8</option>
+                <option value="9">Grade 9</option>
+            </select>
+        </div>
+        <div class="user-invite-container" id="userInviteContainer">
+            <!-- Users will be dynamically added here -->
+        </div>
+        <div class="dialog-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeUserInviteDialog()">Cancel</button>
+            <button type="button" class="btn" onclick="sendClassInvites()">Send Invitations</button>
+        </div>
+    </dialog>
+
+    <!-- Quiz Creation Dialog -->
+    <dialog id="quizCreationDialog" class="large">
+        <div class="dialog-header">
+            <h2>Create Quiz</h2>
+            <button class="close-dialog" onclick="closeQuizCreationDialog()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form class="dialog-form" id="quizCreationForm">
+            <div class="form-group full-width">
+                <label for="quizTitle">Quiz Title</label>
+                <input type="text" id="quizTitle" required>
+            </div>
+            <div class="form-group">
+                <label for="quizSubject">Subject</label>
+                <select id="quizSubject" required>
+                    <option value="Math">Math</option>
+                    <option value="Science">Science</option>
+                    <option value="English">English</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                    <option value="Art">Art</option>
+                    <option value="Music">Music</option>
+                    <option value="Physical Education">Physical Education</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="quizDifficulty">Difficulty</label>
+                <select id="quizDifficulty" required>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <div class="form-group full-width">
+                <label for="quizDescription">Description</label>
+                <textarea id="quizDescription" placeholder="Describe your quiz..."></textarea>
+            </div>
+            <div class="form-group full-width">
+                <button type="button" class="btn" onclick="addQuizQuestion()">
+                    <i class="fas fa-plus"></i> Add Question
+                </button>
+            </div>
+            <div class="form-group full-width">
+                <div class="quiz-questions-container" id="quizQuestionsContainer">
+                    <!-- Questions will be added here -->
+                </div>
+            </div>
+            <div class="dialog-actions full-width">
+                <button type="button" class="btn btn-secondary" onclick="closeQuizCreationDialog()">Cancel</button>
+                <button type="submit" class="btn">Create Quiz</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Quiz Taking Dialog -->
+    <dialog id="quizTakingDialog" class="large">
+        <div class="dialog-header">
+            <h2 id="quizTakingTitle">Quiz</h2>
+            <button class="close-dialog" onclick="closeQuizTakingDialog()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="quiz-progress">
+            <div class="quiz-progress-bar" id="quizProgressBar" style="width: 0%"></div>
+        </div>
+        <div class="quiz-question-counter" id="questionCounter">Question 1 of 1</div>
+        <div id="quizQuestionContainer">
+            <!-- Question will be displayed here -->
+        </div>
+        <div class="quiz-navigation">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()" style="display: none;">
+                <i class="fas fa-arrow-left"></i> Previous
+            </button>
+            <button class="btn" id="nextBtn" onclick="nextQuestion()">
+                Next <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </dialog>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1>Epsilon Academics</h1>
+            <p>Learning Tools for Grades 7-9</p>
+        </div>
+        
+        <!-- User Profile (shown when logged in) -->
+        <div class="user-profile" id="userProfile" style="display: none;">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">User</div>
+                    <div class="user-email" id="userEmail">user@example.com</div>
+                </div>
+            </div>
+            <button class="btn" onclick="logout()" style="padding: 5px 10px; font-size: 0.8rem;">Logout</button>
+        </div>
+        
+        <!-- Login/Signup Buttons (shown when logged out) -->
+        <div class="user-profile" id="authButtons">
+            <button class="btn" onclick="showLoginDialog()" style="margin-right: 10px;">Login</button>
+            <button class="btn" onclick="showAccountDialog()">Sign Up</button>
+        </div>
+        
+        <ul class="nav-menu">
+            <li class="nav-item active" data-section="home">
+                <i class="fas fa-home"></i> Home
+            </li>
+            <li class="nav-item" data-section="calculator">
+                <i class="fas fa-calculator"></i> Calculator & Converter
+            </li>
+            <li class="nav-item" data-section="translator">
+                <i class="fas fa-language"></i> Translator
+            </li>
+            <li class="nav-item" data-section="work-manager">
+                <i class="fas fa-tasks"></i> Work Manager
+            </li>
+            <li class="nav-item" data-section="grade-planner">
+                <i class="fas fa-chart-line"></i> Grade Planner
+            </li>
+            <li class="nav-item" data-section="community">
+                <i class="fas fa-users"></i> Community
+            </li>
+            <li class="nav-item" data-section="quiz">
+                <i class="fas fa-question-circle"></i> Quiz
+            </li>
+            <li class="nav-item" data-section="learn">
+                <i class="fas fa-graduation-cap"></i> Learn with Epsilon
+            </li>
+            <li class="nav-item" data-section="institution">
+                <i class="fas fa-school"></i> Institution
+            </li>
+            <li class="nav-item" data-section="users">
+                <i class="fas fa-user-friends"></i> Users
+            </li>
+            <li class="nav-item" data-section="classes">
+                <i class="fas fa-chalkboard"></i> Classes
+            </li>
+            <li class="nav-item" data-section="settings">
+                <i class="fas fa-cog"></i> Settings
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <section class="content-section active" id="home">
+            <div class="hero">
+                <img src="./icon.png" width="200px" height="200px">
+                <h2>Welcome to Epsilon Academics</h2>
+                <h2>BY warren adrain</h2>
+                <p>Your comprehensive learning toolkit designed specifically for students in grades 7-9. Explore our collection of tools to enhance your learning experience.</p>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <i class="fas fa-calculator"></i>
+                    <h3>Calculator & Converter</h3>
+                    <p>Solve math problems quickly and convert between different units of measurement.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-language"></i>
+                    <h3>Translator</h3>
+                    <p>Translate text between different languages to support your language learning.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-tasks"></i>
+                    <h3>Work Manager</h3>
+                    <p>Keep track of your assignments, projects, and deadlines in one organized place.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Grade Planner</h3>
+                    <p>Monitor your academic progress and track what you've learned in each subject.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Community</h3>
+                    <p>Share your thoughts, ask questions, and connect with other students.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>Quiz</h3>
+                    <p>Create and take quizzes to test your knowledge and challenge your friends.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Learn with Epsilon</h3>
+                    <p>Explore specialized learning resources from Epsilon's ecosystem of educational tools.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-school"></i>
+                    <h3>Institution</h3>
+                    <p>Create and manage educational institutions with classes and collaboration tools.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chalkboard"></i>
+                    <h3>Classes</h3>
+                    <p>Join classes, chat with classmates, and share educational resources.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learn with Epsilon Section -->
+        <section class="content-section" id="learn">
+            <div class="section-header">
+                <h2>Learn with Epsilon</h2>
+                <p>Explore specialized learning resources from Epsilon's ecosystem of educational tools.</p>
+            </div>
+
+            <div class="learn-grid">
+                <div class="learn-card" onclick="window.open('https://epsilonneon-sketch.github.io/epsilon-aproxi-v2/', '_blank')">
+                    <div class="learn-card-image">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="learn-card-content">
+                        <div class="learn-card-title">Epsilon Business Management</div>
+                        <div class="learn-card-description">Learn essential business concepts and management strategies with our comprehensive BMS platform.</div>
+                        <div class="learn-card-footer">
+                            <span class="learn-card-tag">Business</span>
+                            <span>View Repository</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="learn-card" onclick="window.open('https://epsilonneon-sketch.github.io/epsilon-heckle-v1/', '_blank')">
+                    <div class="learn-card-image">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="learn-card-content">
+                        <div class="learn-card-title">Epsilon Heckle Gaming</div>
+                        <div class="learn-card-description">Explore game development concepts and create your own interactive experiences with Aproxi Gaming.</div>
+                        <div class="learn-card-footer">
+                            <span class="learn-card-tag">Gaming</span>
+                            <span>View Repository</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="learn-card" onclick="window.open('https://epsilonneon-sketch.github.io/epsilon-editz-v1/', '_blank')">
+                    <div class="learn-card-image">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="learn-card-content">
+                        <div class="learn-card-title">Epsilon Heckle Editing</div>
+                        <div class="learn-card-description">Master video editing techniques and create professional content with Heckle's editing tools.</div>
+                        <div class="learn-card-footer">
+                            <span class="learn-card-tag">Editing</span>
+                            <span>View Repository</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="learn-card" onclick="window.open('https://epsilonneon-sketch.github.io/epsilon-neote-v1/', '_blank')">
+                    <div class="learn-card-image">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="learn-card-content">
+                        <div class="learn-card-title">Epsilon Neote Programming</div>
+                        <div class="learn-card-description">Learn programming fundamentals and advanced concepts with our comprehensive Neote coding platform.</div>
+                        <div class="learn-card-footer">
+                            <span class="learn-card-tag">Programming</span>
+                            <span>View Repository</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calculator & Converter Section -->
+        <section class="content-section" id="calculator">
+            <div class="section-header">
+                <h2>Calculator & Converter</h2>
+                <p>Use our calculator for quick math problems and convert between different units.</p>
+            </div>
+
+            <div class="tool-container">
+                <div class="tool-section">
+                    <h3>Calculator</h3>
+                    <div class="calc-display" id="calcDisplay">0</div>
+                    <div class="calc-buttons">
+                        <button class="calc-btn clear" onclick="clearCalc()">C</button>
+                        <button class="calc-btn operator" onclick="appendToCalc('/')">/</button>
+                        <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
+                        <button class="calc-btn operator" onclick="deleteLastCalc()">←</button>
+                        
+                        <button class="calc-btn" onclick="appendToCalc('7')">7</button>
+                        <button class="calc-btn" onclick="appendToCalc('8')">8</button>
+                        <button class="calc-btn" onclick="appendToCalc('9')">9</button>
+                        <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+                        
+                        <button class="calc-btn" onclick="appendToCalc('4')">4</button>
+                        <button class="calc-btn" onclick="appendToCalc('5')">5</button>
+                        <button class="calc-btn" onclick="appendToCalc('6')">6</button>
+                        <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+                        
+                        <button class="calc-btn" onclick="appendToCalc('1')">1</button>
+                        <button class="calc-btn" onclick="appendToCalc('2')">2</button>
+                        <button class="calc-btn" onclick="appendToCalc('3')">3</button>
+                        <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+                        
+                        <button class="calc-btn" onclick="appendToCalc('0')">0</button>
+                        <button class="calc-btn" onclick="appendToCalc('00')">00</button>
+                        <button class="calc-btn" onclick="calculateResult()" style="grid-column: span 2;">=</button>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h3>Unit Converter</h3>
+                    <div class="converter-group">
+                        <label>Conversion Type</label>
+                        <select id="conversionType" onchange="updateConverterOptions()">
+                            <option value="length">Length</option>
+                            <option value="weight">Weight</option>
+                            <option value="temperature">Temperature</option>
+                            <option value="volume">Volume</option>
+                        </select>
+                    </div>
+                    <div class="converter-group">
+                        <label>From</label>
+                        <select id="fromUnit"></select>
+                        <input type="number" id="fromValue" placeholder="Enter value">
+                    </div>
+                    <div class="converter-group">
+                        <label>To</label>
+                        <select id="toUnit"></select>
+                        <input type="number" id="toValue" placeholder="Result" readonly>
+                    </div>
+                    <button class="btn" onclick="convert()">Convert</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Translator Section -->
+        <section class="content-section" id="translator">
+            <div class="section-header">
+                <h2>Translator</h2>
+                <p>Translate text between different languages to support your language learning.</p>
+            </div>
+
+            <div class="card">
+                <div class="translator-container">
+                    <div>
+                        <div class="language-selector">
+                            <select id="fromLanguage">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="zh">Chinese</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ar">Arabic</option>
+                                <option value="hi">Hindi</option>
+                            </select>
+                            <button class="translate-btn" onclick="swapLanguages()">
+                                <i class="fas fa-exchange-alt"></i>
+                            </button>
+                            <select id="toLanguage">
+                                <option value="es">Spanish</option>
+                                <option value="en">English</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="zh">Chinese</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ar">Arabic</option>
+                                <option value="hi">Hindi</option>
+                            </select>
+                        </div>
+                        <textarea class="text-area" id="sourceText" placeholder="Enter text to translate..."></textarea>
+                    </div>
+                    <div>
+                        <div class="language-selector">
+                            <div style="width: 100%; text-align: center; color: var(--dark-gray);">Translation</div>
+                        </div>
+                        <textarea class="text-area" id="translatedText" placeholder="Translation will appear here..." readonly></textarea>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn" onclick="translateText()">Translate</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Manager Section -->
+        <section class="content-section" id="work-manager">
+            <div class="section-header">
+                <h2>Work Manager</h2>
+                <p>Keep track of your assignments, projects, and deadlines in one organized place.</p>
+            </div>
+
+            <div class="card">
+                <h3>Add New Work</h3>
+                <form class="work-form" id="workForm">
+                    <div class="form-group">
+                        <label for="workTitle">Work Title</label>
+                        <input type="text" id="workTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="workSubject">Subject</label>
+                        <select id="workSubject">
+                            <option value="Math">Math</option>
+                            <option value="Science">Science</option>
+                            <option value="English">English</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                            <option value="Art">Art</option>
+                            <option value="Music">Music</option>
+                            <option value="Physical Education">Physical Education</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="workType">Type</label>
+                        <select id="workType">
+                            <option value="Homework">Homework</option>
+                            <option value="Project">Project</option>
+                            <option value="Exam">Exam</option>
+                            <option value="Quiz">Quiz</option>
+                            <option value="Essay">Essay</option>
+                            <option value="Presentation">Presentation</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="workDeadline">Deadline</label>
+                        <input type="date" id="workDeadline" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="questionNumber">Question Number</label>
+                        <input type="text" id="questionNumber" placeholder="e.g., 1-10, 5, 7-12">
+                    </div>
+                    <div class="form-group">
+                        <label for="workPriority">Priority</label>
+                        <select id="workPriority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="workDescription">Description</label>
+                        <textarea id="workDescription" placeholder="Enter work description..."></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" class="btn">Add Work</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Work List</h3>
+                <div class="work-list" id="workList">
+                    <!-- Work items will be added here dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Grade Planner Section -->
+        <section class="content-section" id="grade-planner">
+            <div class="section-header">
+                <h2>Grade Planner</h2>
+                <p>Monitor your academic progress and track what you've learned in each subject.</p>
+            </div>
+
+            <div class="card">
+                <h3>Add Grade</h3>
+                <form class="grade-form" id="gradeForm">
+                    <div class="form-group">
+                        <label for="gradeSubject">Subject</label>
+                        <select id="gradeSubject">
+                            <option value="Math">Math</option>
+                            <option value="Science">Science</option>
+                            <option value="English">English</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                            <option value="Art">Art</option>
+                            <option value="Music">Music</option>
+                            <option value="Physical Education">Physical Education</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gradeScore">Grade (%)</label>
+                        <input type="number" id="gradeScore" min="0" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gradeTerm">Term</label>
+                        <select id="gradeTerm">
+                            <option value="Term 1">Term 1</option>
+                            <option value="Term 2">Term 2</option>
+                            <option value="Term 3">Term 3</option>
+                            <option value="Final">Final</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="gradeYear">Year</label>
+                        <input type="number" id="gradeYear" min="2020" max="2030" value="2023">
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" class="btn">Add Grade</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Grades Overview</h3>
+                <div id="gradesList">
+                    <!-- Grades will be added here dynamically -->
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>Grade Chart</h3>
+                <canvas id="gradeChart"></canvas>
+            </div>
+
+            <div class="card">
+                <h3>Learning Tracker</h3>
+                <form id="learningForm">
+                    <div class="form-group">
+                        <label for="learningSubject">Subject</label>
+                        <select id="learningSubject">
+                            <option value="Math">Math</option>
+                            <option value="Science">Science</option>
+                            <option value="English">English</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                            <option value="Art">Art</option>
+                            <option value="Music">Music</option>
+                            <option value="Physical Education">Physical Education</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="learningTopic">Topic</label>
+                        <input type="text" id="learningTopic" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="learningDifficulty">Difficulty</label>
+                        <select id="learningDifficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" class="btn">Add Learning Item</button>
+                    </div>
+                </form>
+                <div class="learning-list" id="learningList">
+                    <!-- Learning items will be added here dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section class="content-section" id="community">
+            <div class="section-header">
+                <h2>Community</h2>
+                <p>Share your thoughts, ask questions, and connect with other students.</p>
+            </div>
+
+            <!-- Post Creation Form -->
+            <div class="post-form" id="postForm">
+                <h3>Create a Post</h3>
+                <textarea id="postContent" placeholder="What's on your mind? Share your thoughts, questions, or discoveries..."></textarea>
+                <div class="post-actions">
+                    <div class="file-inputs">
+                        <div class="file-input-wrapper">
+                            <label for="imageUpload" class="file-input-label">
+                                <i class="fas fa-image"></i> Image
+                            </label>
+                            <input type="file" id="imageUpload" accept="image/*" onchange="handleFileUpload(event, 'image')">
+                        </div>
+                        <div class="file-input-wrapper">
+                            <label for="videoUpload" class="file-input-label">
+                                <i class="fas fa-video"></i> Video
+                            </label>
+                            <input type="file" id="videoUpload" accept="video/*" onchange="handleFileUpload(event, 'video')">
+                        </div>
+                        <div class="file-input-wrapper">
+                            <label for="audioUpload" class="file-input-label">
+                                <i class="fas fa-music"></i> Audio
+                            </label>
+                            <input type="file" id="audioUpload" accept="audio/*" onchange="handleFileUpload(event, 'audio')">
+                        </div>
+                    </div>
+                    <button class="btn" onclick="createPost()">Post</button>
+                </div>
+                <div class="attached-files" id="attachedFiles"></div>
+            </div>
+
+            <!-- Posts Container -->
+            <div class="posts-container" id="postsContainer">
+                <!-- Posts will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section class="content-section" id="quiz">
+            <div class="section-header">
+                <div class="institution-header">
+                    <div>
+                        <h2>Quiz Center</h2>
+                        <p>Test your knowledge and challenge your friends with custom quizzes.</p>
+                    </div>
+                    <button class="btn" onclick="showQuizCreationDialog()">
+                        <i class="fas fa-plus"></i> Create Quiz
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Search and Filter -->
+            <div class="card">
+                <div class="quiz-search">
+                    <input type="text" id="quizSearchInput" placeholder="Search quizzes..." onkeyup="searchQuizzes()">
+                    <select id="quizSubjectFilter" onchange="filterQuizzes()">
+                        <option value="">All Subjects</option>
+                        <option value="Math">Math</option>
+                        <option value="Science">Science</option>
+                        <option value="English">English</option>
+                        <option value="History">History</option>
+                        <option value="Geography">Geography</option>
+                        <option value="Art">Art</option>
+                        <option value="Music">Music</option>
+                        <option value="Physical Education">Physical Education</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <select id="quizDifficultyFilter" onchange="filterQuizzes()">
+                        <option value="">All Difficulties</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Quiz Grid -->
+            <div class="quiz-grid" id="quizGrid">
+                <!-- Quizzes will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- Institution Section -->
+        <section class="content-section" id="institution">
+            <div class="section-header">
+                <div class="institution-header">
+                    <div>
+                        <h2>Institutions</h2>
+                        <p>Create and manage educational institutions.</p>
+                    </div>
+                    <button class="btn" onclick="showInstitutionDialog()">
+                        <i class="fas fa-plus"></i> Create Institution
+                    </button>
+                </div>
+            </div>
+
+            <div class="institution-grid" id="institutionGrid">
+                <!-- Institutions will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- Users Section -->
+        <section class="content-section" id="users">
+            <div class="section-header">
+                <h2>Users Directory</h2>
+                <p>Browse and connect with other users on the platform.</p>
+            </div>
+
+            <div class="users-grid" id="usersGrid">
+                <!-- Users will be dynamically added here -->
+            </div>
+        </section>
+
+        <!-- Classes Section -->
+        <section class="content-section" id="classes">
+            <div class="section-header">
+                <div>
+                    <h2>My Classes</h2>
+                    <p>Manage your classes and communicate with classmates.</p>
+                </div>
+                <button class="btn" onclick="showClassDialog()">
+                    <i class="fas fa-plus"></i> Create Class
+                </button>
+            </div>
+
+            <div class="classes-container">
+                <div class="classes-list">
+                    <h3>My Classes</h3>
+                    <div id="myClassesList">
+                        <!-- Classes will be dynamically added here -->
+                    </div>
+                </div>
+                <div class="classes-list">
+                    <h3>Available Classes</h3>
+                    <div id="availableClassesList">
+                        <!-- Available classes will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section class="content-section" id="settings">
+            <div class="section-header">
+                <h2>Settings</h2>
+                <p>Customize your Epsilon Academics experience.</p>
+            </div>
+
+            <div class="card">
+                <div class="settings-section">
+                    <h3>Theme Settings</h3>
+                    <p>Choose a color theme for your interface:</p>
+                    <div class="theme-selector">
+                        <div class="theme-option theme-green active" onclick="changeTheme('green')" title="Green"></div>
+                        <div class="theme-option theme-blue" onclick="changeTheme('blue')" title="Blue"></div>
+                        <div class="theme-option theme-purple" onclick="changeTheme('purple')" title="Purple"></div>
+                        <div class="theme-option theme-red" onclick="changeTheme('red')" title="Red"></div>
+                        <div class="theme-option theme-teal" onclick="changeTheme('teal')" title="Teal"></div>
+                        <div class="theme-option theme-indigo" onclick="changeTheme('indigo')" title="Indigo"></div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Account Settings</h3>
+                    <div id="accountSettings" style="display: none;">
+                        <p>Logged in as: <strong id="settingsUsername">User</strong></p>
+                        <p>Email: <strong id="settingsEmail">user@example.com</strong></p>
+                        <button class="btn btn-danger" onclick="logout()">Logout</button>
+                    </div>
+                    <div id="loginPrompt">
+                        <p>You are not logged in. <a href="#" onclick="showLoginDialog()">Login</a> or <a href="#" onclick="showAccountDialog()">Create an account</a> to save your data.</p>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Data Management</h3>
+                    <p>Manage your saved data:</p>
+                    <button class="btn" onclick="exportData()">Export Data</button>
+                    <button class="btn btn-danger" onclick="clearAllData()">Clear All Data</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Theme colors
+        const themes = {
+            green: {
+                primary: '#2e7d32',
+                light: '#4caf50',
+                pale: '#e8f5e9',
+                dark: '#1b5e20'
+            },
+            blue: {
+                primary: '#1565c0',
+                light: '#2196f3',
+                pale: '#e3f2fd',
+                dark: '#0d47a1'
+            },
+            purple: {
+                primary: '#6a1b9a',
+                light: '#9c27b0',
+                pale: '#f3e5f5',
+                dark: '#4a148c'
+            },
+            red: {
+                primary: '#c62828',
+                light: '#f44336',
+                pale: '#ffebee',
+                dark: '#b71c1c'
+            },
+            teal: {
+                primary: '#00695c',
+                light: '#009688',
+                pale: '#e0f2f1',
+                dark: '#004d40'
+            },
+            indigo: {
+                primary: '#283593',
+                light: '#3f51b5',
+                pale: '#e8eaf6',
+                dark: '#1a237e'
+            }
+        };
+
+        // Account Management
+        let currentUser = null;
+        let currentClass = null;
+        let selectedUsersForInvitation = [];
+        let availableUsersForInvitation = [];
+        let attachedFiles = [];
+        let quizQuestions = [];
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+
+        // Check if user is logged in on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus();
+            loadTheme();
+            loadInstitutions();
+            loadUsers();
+            loadClasses();
+            loadPosts();
+            loadQuizzes();
+            loadWorkItems();
+            loadGrades();
+            loadLearningItems();
+        });
+
+        function checkLoginStatus() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showUserProfile();
+            } else {
+                showAuthButtons();
+            }
+        }
+
+        function showUserProfile() {
+            document.getElementById('userProfile').style.display = 'flex';
+            document.getElementById('authButtons').style.display = 'none';
+            document.getElementById('userName').textContent = currentUser.fullName;
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('userAvatar').textContent = currentUser.fullName.charAt(0).toUpperCase();
+            
+            // Update settings page
+            document.getElementById('accountSettings').style.display = 'block';
+            document.getElementById('loginPrompt').style.display = 'none';
+            document.getElementById('settingsUsername').textContent = currentUser.username;
+            document.getElementById('settingsEmail').textContent = currentUser.email;
+        }
+
+        function showAuthButtons() {
+            document.getElementById('userProfile').style.display = 'none';
+            document.getElementById('authButtons').style.display = 'flex';
+            
+            // Update settings page
+            document.getElementById('accountSettings').style.display = 'none';
+            document.getElementById('loginPrompt').style.display = 'block';
+        }
+
+        function showAccountDialog() {
+            document.getElementById('accountDialog').showModal();
+        }
+
+        function closeAccountDialog() {
+            document.getElementById('accountDialog').close();
+        }
+
+        function showLoginDialog() {
+            document.getElementById('loginDialog').showModal();
+        }
+
+        function closeLoginDialog() {
+            document.getElementById('loginDialog').close();
+        }
+
+        // Account form submission
+        document.getElementById('accountForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('fullName').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const age = document.getElementById('age').value;
+            const grade = document.getElementById('grade').value;
+            const interests = document.getElementById('interests').value;
+            
+            // Check if username already exists
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.find(user => user.username === username)) {
+                alert('Username already exists. Please choose a different one.');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                fullName,
+                username,
+                email,
+                password, // In a real app, this should be hashed
+                age,
+                grade,
+                interests,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Save user
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Log in the new user
+            currentUser = newUser;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Update UI
+            showUserProfile();
+            closeAccountDialog();
+            
+            // Reset form
+            document.getElementById('accountForm').reset();
+        });
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Get users from localStorage
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            // Find user
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                // Log in user
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // Update UI
+                showUserProfile();
+                closeLoginDialog();
+                
+                // Reset form
+                document.getElementById('loginForm').reset();
+            } else {
+                alert('Invalid username or password');
+            }
+        });
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showAuthButtons();
+        }
+
+        // Theme Management
+        function changeTheme(themeName) {
+            const theme = themes[themeName];
+            
+            // Update CSS variables
+            document.documentElement.style.setProperty('--primary-green', theme.primary);
+            document.documentElement.style.setProperty('--light-green', theme.light);
+            document.documentElement.style.setProperty('--pale-green', theme.pale);
+            document.documentElement.style.setProperty('--dark-green', theme.dark);
+            
+            // Update active theme indicator
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector(`.theme-${themeName}`).classList.add('active');
+            
+            // Save theme preference
+            localStorage.setItem('theme', themeName);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'green';
+            changeTheme(savedTheme);
+        }
+
+        // Data Management
+        function exportData() {
+            const data = {
+                workItems: JSON.parse(localStorage.getItem('workItems')) || [],
+                grades: JSON.parse(localStorage.getItem('grades')) || [],
+                learningItems: JSON.parse(localStorage.getItem('learningItems')) || [],
+                posts: JSON.parse(localStorage.getItem('posts')) || [],
+                quizzes: JSON.parse(localStorage.getItem('quizzes')) || [],
+                institutions: JSON.parse(localStorage.getItem('institutions')) || [],
+                classes: JSON.parse(localStorage.getItem('classes')) || [],
+                theme: localStorage.getItem('theme') || 'green'
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `epsilon_data_${new Date().toISOString().slice(0,10)}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                localStorage.removeItem('workItems');
+                localStorage.removeItem('grades');
+                localStorage.removeItem('learningItems');
+                localStorage.removeItem('posts');
+                localStorage.removeItem('quizzes');
+                localStorage.removeItem('institutions');
+                localStorage.removeItem('classes');
+                
+                // Refresh the page to update the UI
+                location.reload();
+            }
+        }
+
+        // Institution Management
+        function showInstitutionDialog() {
+            if (!currentUser) {
+                alert('Please login to create an institution.');
+                showLoginDialog();
+                return;
+            }
+            document.getElementById('institutionDialog').showModal();
+        }
+
+        function closeInstitutionDialog() {
+            document.getElementById('institutionDialog').close();
+            document.getElementById('institutionForm').reset();
+        }
+
+        document.getElementById('institutionForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const institution = {
+                id: Date.now(),
+                name: document.getElementById('institutionName').value,
+                type: document.getElementById('institutionType').value,
+                minGrade: parseInt(document.getElementById('minGrade').value),
+                maxGrade: parseInt(document.getElementById('maxGrade').value),
+                minAge: parseInt(document.getElementById('minAge').value),
+                maxAge: parseInt(document.getElementById('maxAge').value),
+                description: document.getElementById('institutionDescription').value,
+                admin: currentUser.username,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Save institution
+            const institutions = JSON.parse(localStorage.getItem('institutions')) || [];
+            institutions.push(institution);
+            localStorage.setItem('institutions', JSON.stringify(institutions));
+            
+            // Close dialog and reload
+            closeInstitutionDialog();
+            loadInstitutions();
+        });
+
+        function loadInstitutions() {
+            const institutions = JSON.parse(localStorage.getItem('institutions')) || [];
+            const container = document.getElementById('institutionGrid');
+            
+            if (institutions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No institutions yet. Create your first institution!</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            institutions.forEach(institution => {
+                const institutionEl = createInstitutionElement(institution);
+                container.appendChild(institutionEl);
+            });
+        }
+
+        function createInstitutionElement(institution) {
+            const institutionEl = document.createElement('div');
+            institutionEl.className = 'institution-card';
+            
+            // Count classes in this institution
+            const classes = JSON.parse(localStorage.getItem('classes')) || [];
+            const institutionClasses = classes.filter(c => c.institutionId === institution.id);
+            
+            institutionEl.innerHTML = `
+                <div class="institution-card-header">
+                    <div>
+                        <div class="institution-title">${institution.name}</div>
+                        <div class="institution-author">by ${institution.admin}</div>
+                    </div>
+                    <span class="institution-badge">${institution.type}</span>
+                </div>
+                <div class="institution-description">${institution.description || 'No description'}</div>
+                <div class="institution-stats">
+                    <div class="institution-stat">
+                        <i class="fas fa-graduation-cap"></i> Grades ${institution.minGrade}-${institution.maxGrade}
+                    </div>
+                    <div class="institution-stat">
+                        <i class="fas fa-users"></i> ${institutionClasses.length} classes
+                    </div>
+                    <div class="institution-stat">
+                        <i class="fas fa-birthday-cake"></i> Ages ${institution.minAge}-${institution.maxAge}
+                    </div>
+                </div>
+            `;
+            
+            return institutionEl;
+        }
+
+        // Users Management
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const container = document.getElementById('usersGrid');
+            
+            if (users.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No users found.</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            users.forEach(user => {
+                const userEl = createUserElement(user);
+                container.appendChild(userEl);
+            });
+        }
+
+        function createUserElement(user) {
+            const userEl = document.createElement('div');
+            userEl.className = 'user-card';
+            
+            userEl.innerHTML = `
+                <div class="user-card-avatar">${user.fullName.charAt(0).toUpperCase()}</div>
+                <div class="user-card-name">${user.fullName}</div>
+                <div class="user-card-email">${user.email}</div>
+                <div class="user-card-details">
+                    Grade ${user.grade} • Age ${user.age}
+                </div>
+                <button class="btn" onclick="inviteUser('${user.username}')">
+                    <i class="fas fa-user-plus"></i> Invite
+                </button>
+            `;
+            
+            return userEl;
+        }
+
+        function inviteUser(username) {
+            if (!currentUser) {
+                alert('Please login to invite users.');
+                showLoginDialog();
+                return;
+            }
+            
+            // Create invitation notification (in a real app, this would send a notification)
+            const invitations = JSON.parse(localStorage.getItem('invitations')) || [];
+            invitations.push({
+                from: currentUser.username,
+                to: username,
+                type: 'user_invite',
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('invitations', JSON.stringify(invitations));
+            
+            alert(`Invitation sent to ${username}!`);
+        }
+
+        // Classes Management
+        function showClassDialog() {
+            if (!currentUser) {
+                alert('Please login to create a class.');
+                showLoginDialog();
+                return;
+            }
+            document.getElementById('classDialog').showModal();
+        }
+
+        function closeClassDialog() {
+            document.getElementById('classDialog').close();
+            document.getElementById('classForm').reset();
+        }
+
+        document.getElementById('classForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const classObj = {
+                id: Date.now(),
+                name: document.getElementById('className').value,
+                subject: document.getElementById('classSubject').value,
+                grade: parseInt(document.getElementById('classGrade').value),
+                maxStudents: parseInt(document.getElementById('maxStudents').value),
+                schedule: document.getElementById('classSchedule').value,
+                description: document.getElementById('classDescription').value,
+                teacher: currentUser.username,
+                students: [currentUser.username],
+                messages: [],
+                createdAt: new Date().toISOString()
+            };
+            
+            // Save class
+            const classes = JSON.parse(localStorage.getItem('classes')) || [];
+            classes.push(classObj);
+            localStorage.setItem('classes', JSON.stringify(classes));
+            
+            // Close dialog and reload
+            closeClassDialog();
+            loadClasses();
+        });
+
+        function loadClasses() {
+            const classes = JSON.parse(localStorage.getItem('classes')) || [];
+            const myClassesContainer = document.getElementById('myClassesList');
+            const availableClassesContainer = document.getElementById('availableClassesList');
+            
+            myClassesContainer.innerHTML = '';
+            availableClassesContainer.innerHTML = '';
+            
+            if (classes.length === 0) {
+                myClassesContainer.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No classes available.</p>';
+                availableClassesContainer.innerHTML = '';
+                return;
+            }
+            
+            classes.forEach(classObj => {
+                const classEl = createClassElement(classObj);
+                
+                if (classObj.students.includes(currentUser?.username)) {
+                    myClassesContainer.appendChild(classEl);
+                } else {
+                    availableClassesContainer.appendChild(classEl);
+                }
+            });
+            
+            if (myClassesContainer.innerHTML === '') {
+                myClassesContainer.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">You haven\'t joined any classes yet.</p>';
+            }
+            
+            if (availableClassesContainer.innerHTML === '') {
+                availableClassesContainer.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No available classes to join.</p>';
+            }
+        }
+
+        function createClassElement(classObj) {
+            const classEl = document.createElement('div');
+            classEl.className = 'class-item';
+            
+            const isJoined = classObj.students.includes(currentUser?.username);
+            const isTeacher = classObj.teacher === currentUser?.username;
+            
+            classEl.innerHTML = `
+                <div class="class-item-header">
+                    <div class="class-name">${classObj.name}</div>
+                    <span class="class-badge">${isTeacher ? 'Teacher' : 'Student'}</span>
+                </div>
+                <div class="class-details">
+                    ${classObj.subject} • Grade ${classObj.grade} • ${classObj.students.length}/${classObj.maxStudents} students
+                </div>
+                <div class="class-details">
+                    ${classObj.schedule || 'No schedule set'}
+                </div>
+                <div style="margin-top: 10px; display: flex; gap: 10px;">
+                    ${isJoined ? 
+                        `<button class="btn" onclick="openClassChat(${classObj.id})">
+                            <i class="fas fa-comments"></i> Chat
+                        </button>` :
+                        `<button class="btn" onclick="joinClass(${classObj.id})">
+                            <i class="fas fa-user-plus"></i> Join
+                        </button>`
+                    }
+                    ${isTeacher ? 
+                        `<button class="btn btn-secondary" onclick="showUserInviteDialog(${classObj.id})">
+                            <i class="fas fa-user-plus"></i> Invite
+                        </button>` : ''
+                    }
+                </div>
+            `;
+            
+            return classEl;
+        }
+
+        function joinClass(classId) {
+            if (!currentUser) {
+                alert('Please login to join classes.');
+                showLoginDialog();
+                return;
+            }
+            
+            const classes = JSON.parse(localStorage.getItem('classes')) || [];
+            const classIndex = classes.findIndex(c => c.id === classId);
+            
+            if (classIndex !== -1) {
+                const classObj = classes[classIndex];
+                
+                if (classObj.students.length >= classObj.maxStudents) {
+                    alert('This class is full.');
+                    return;
+                }
+                
+                if (!classObj.students.includes(currentUser.username)) {
+                    classObj.students.push(currentUser.username);
+                    localStorage.setItem('classes', JSON.stringify(classes));
+                    loadClasses();
+                    alert(`You have joined ${classObj.name}!`);
+                }
+            }
+        }
+
+        // User Invitation Dialog
+        function showUserInviteDialog(classId) {
+            if (!currentUser) return;
+            
+            currentClass = { id: classId };
+            selectedUsersForInvitation = [];
+            
+            // Get all users except current user and those already in the class
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const classes = JSON.parse(localStorage.getItem('classes')) || [];
+            const currentClassData = classes.find(c => c.id === classId);
+            const existingStudentUsernames = currentClassData ? currentClassData.students : [];
+            
+            availableUsersForInvitation = users.filter(u => 
+                u.username !== currentUser.username && !existingStudentUsernames.includes(u.username)
+            );
+            
+            // Render users in the dialog
+            renderInviteUsers();
+            
+            // Show the dialog
+            document.getElementById('userInviteDialog').showModal();
+        }
+
+        function closeUserInviteDialog() {
+            document.getElementById('userInviteDialog').close();
+            currentClass = null;
+            selectedUsersForInvitation = [];
+        }
+
+        function renderInviteUsers() {
+            const container = document.getElementById('userInviteContainer');
+            container.innerHTML = '';
+            
+            if (availableUsersForInvitation.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No users available to invite.</p>';
+                return;
+            }
+            
+            availableUsersForInvitation.forEach(user => {
+                const userEl = document.createElement('div');
+                userEl.className = `user-invite-item ${selectedUsersForInvitation.includes(user.username) ? 'selected' : ''}`;
+                
+                userEl.innerHTML = `
+                    <div class="user-invite-avatar">${user.fullName.charAt(0).toUpperCase()}</div>
+                    <div class="user-invite-info">
+                        <div class="user-invite-name">${user.fullName}</div>
+                        <div class="user-invite-details">Grade ${user.grade} • Age ${user.age}</div>
+                    </div>
+                    <input type="checkbox" class="user-invite-checkbox" 
+                           ${selectedUsersForInvitation.includes(user.username) ? 'checked' : ''}
+                           onchange="toggleUserSelection('${user.username}')">
+                `;
+                
+                userEl.addEventListener('click', (e) => {
+                    // Prevent toggle if clicking on checkbox
+                    if (e.target.type !== 'checkbox') {
+                        toggleUserSelection(user.username);
+                    }
+                });
+                
+                container.appendChild(userEl);
+            });
+        }
+
+        function toggleUserSelection(username) {
+            const index = selectedUsersForInvitation.indexOf(username);
+            if (index === -1) {
+                selectedUsersForInvitation.push(username);
+            } else {
+                selectedUsersForInvitation.splice(index, 1);
+            }
+            renderInviteUsers();
+        }
+
+        function filterInviteUsers() {
+            const searchTerm = document.getElementById('userInviteSearch').value.toLowerCase();
+            const ageFilter = document.getElementById('ageFilter').value;
+            const gradeFilter = document.getElementById('gradeFilter').value;
+            
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const classes = JSON.parse(localStorage.getItem('classes')) || [];
+            const currentClassData = classes.find(c => c.id === currentClass.id);
+            const existingStudentUsernames = currentClassData ? currentClassData.students : [];
+            
+            availableUsersForInvitation = users.filter(u => {
+                // Exclude current user and existing students
+                if (u.username === currentUser.username || existingStudentUsernames.includes(u.username)) return false;
+                
+                // Filter by search term
+                if (searchTerm && !u.fullName.toLowerCase().includes(searchTerm)) return false;
+                
+                // Filter by age
+                if (ageFilter && parseInt(u.age) !== parseInt(ageFilter)) return false;
+                
+                // Filter by grade
+                if (gradeFilter && u.grade !== gradeFilter) return false;
+                
+                return true;
+            });
+            
+            renderInviteUsers();
+        }
+
+        function sendClassInvites() {
+            if (!currentClass || selectedUsersForInvitation.length === 0) {
+                alert('Please select at least one user to invite.');
+                return;
+            }
+            
+            // Create invitations
+            const invitations = JSON.parse(localStorage.getItem('invitations')) || [];
+            selectedUsersForInvitation.forEach(username => {
+                invitations.push({
+                    from: currentUser.username,
+                    to: username,
+                    type: 'class_invite',
+                    classId: currentClass.id,
+                    timestamp: new Date().toISOString()
+                });
+            });
+            localStorage.setItem('invitations', JSON.stringify(invitations));
+            
+            alert(`Invitations sent to ${selectedUsersForInvitation.length} user(s)!`);
+            closeUserInviteDialog();
+        }
+
+        // Class Chat
+        function openClassChat(classId) {
+            const classes = JSON.parse(localStorage.getItem('classes')) || [];
+            currentClass = classes.find(c => c.id === classId);
+            
+            if (!currentClass) return;
+            
+            document.getElementById('classChatTitle').textContent = `${currentClass.name} - Chat`;
+            loadClassMessages();
+            document.getElementById('classChatDialog').showModal();
+        }
+
+        function closeClassChatDialog() {
+            document.getElementById('classChatDialog').close();
+            currentClass = null;
+        }
+
+        function loadClassMessages() {
+            if (!currentClass) return;
+            
+            const messagesContainer = document.getElementById('classChatMessages');
+            messagesContainer.innerHTML = '';
+            
+            if (!currentClass.messages || currentClass.messages.length === 0) {
+                messagesContainer.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No messages yet. Start the conversation!</p>';
+                return;
+            }
+            
+            currentClass.messages.forEach(message => {
+                const messageEl = createMessageElement(message);
+                messagesContainer.appendChild(messageEl);
+            });
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function createMessageElement(message) {
+            const messageEl = document.createElement('div');
+            messageEl.className = `chat-message ${message.author === currentUser?.username ? 'own' : ''}`;
+            
+            let attachmentHtml = '';
+            if (message.attachment) {
+                attachmentHtml = `
+                    <div class="chat-attachment">
+                        <i class="fas fa-${getFileIcon(message.attachment.type)}"></i>
+                        ${message.attachment.name}
+                    </div>
+                `;
+            }
+            
+            messageEl.innerHTML = `
+                <div class="chat-message-avatar">${message.author.charAt(0).toUpperCase()}</div>
+                <div class="chat-message-content">
+                    <div class="chat-message-author">${message.author}</div>
+                    <div class="chat-message-text">${message.text}</div>
+                    ${attachmentHtml}
+                    <div class="chat-message-time">${formatTime(message.timestamp)}</div>
+                </div>
+            `;
+            
+            return messageEl;
+        }
+
+        function sendClassMessage() {
+            if (!currentClass || !currentUser) return;
+            
+            const input = document.getElementById('classChatInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            const message = {
+                author: currentUser.username,
+                text: text,
+                timestamp: new Date().toISOString()
+            };
+            
+            if (!currentClass.messages) currentClass.messages = [];
+            currentClass.messages.push(message);
+            
+            // Save to localStorage
+            const classes = JSON.parse(localStorage.getItem('classes')) || [];
+            const classIndex = classes.findIndex(c => c.id === currentClass.id);
+            if (classIndex !== -1) {
+                classes[classIndex] = currentClass;
+                localStorage.setItem('classes', JSON.stringify(classes));
+            }
+            
+            // Clear input and reload messages
+            input.value = '';
+            loadClassMessages();
+        }
+
+        function attachChatFile() {
+            document.getElementById('chatFileInput').click();
+        }
+
+        function handleChatFile(event) {
+            const file = event.target.files[0];
+            if (!file || !currentClass || !currentUser) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const message = {
+                    author: currentUser.username,
+                    text: 'Shared a file',
+                    attachment: {
+                        name: file.name,
+                        type: getFileType(file.type),
+                        data: e.target.result
+                    },
+                    timestamp: new Date().toISOString()
+                };
+                
+                if (!currentClass.messages) currentClass.messages = [];
+                currentClass.messages.push(message);
+                
+                // Save to localStorage
+                const classes = JSON.parse(localStorage.getItem('classes')) || [];
+                const classIndex = classes.findIndex(c => c.id === currentClass.id);
+                if (classIndex !== -1) {
+                    classes[classIndex] = currentClass;
+                    localStorage.setItem('classes', JSON.stringify(classes));
+                }
+                
+                loadClassMessages();
+            };
+            
+            reader.readAsDataURL(file);
+            event.target.value = ''; // Reset input
+        }
+
+        function getFileType(mimeType) {
+            if (mimeType.startsWith('image/')) return 'image';
+            if (mimeType.startsWith('video/')) return 'video';
+            if (mimeType.startsWith('audio/')) return 'audio';
+            return 'file';
+        }
+
+        function getFileIcon(type) {
+            switch(type) {
+                case 'image': return 'image';
+                case 'video': return 'video';
+                case 'audio': return 'music';
+                default: return 'file';
+            }
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)} min ago`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
+            return date.toLocaleDateString();
+        }
+
+        // Community/Posts Functionality
+        function handleFileUpload(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileData = {
+                    name: file.name,
+                    type: type,
+                    data: e.target.result,
+                    size: file.size
+                };
+                
+                // Check if file already exists
+                const existingIndex = attachedFiles.findIndex(f => f.name === file.name);
+                if (existingIndex !== -1) {
+                    attachedFiles[existingIndex] = fileData;
+                } else {
+                    attachedFiles.push(fileData);
+                }
+                
+                updateAttachedFiles();
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        function updateAttachedFiles() {
+            const container = document.getElementById('attachedFiles');
+            container.innerHTML = '';
+            
+            attachedFiles.forEach((file, index) => {
+                const fileEl = document.createElement('div');
+                fileEl.className = 'attached-file';
+                fileEl.innerHTML = `
+                    <i class="fas fa-${getFileIcon(file.type)}"></i>
+                    ${file.name}
+                    <i class="fas fa-times" style="cursor: pointer; margin-left: 5px;" onclick="removeAttachedFile(${index})"></i>
+                `;
+                container.appendChild(fileEl);
+            });
+        }
+
+        function removeAttachedFile(index) {
+            attachedFiles.splice(index, 1);
+            updateAttachedFiles();
+        }
+
+        function createPost() {
+            const content = document.getElementById('postContent').value.trim();
+            
+            if (!content && attachedFiles.length === 0) {
+                alert('Please add some content or attach a file to create a post.');
+                return;
+            }
+            
+            if (!currentUser) {
+                alert('Please login to create a post.');
+                showLoginDialog();
+                return;
+            }
+            
+            const post = {
+                id: Date.now(),
+                author: currentUser.fullName,
+                username: currentUser.username,
+                content: content,
+                attachments: [...attachedFiles],
+                likes: [],
+                comments: [],
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save post
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            posts.unshift(post); // Add to beginning
+            localStorage.setItem('posts', JSON.stringify(posts));
+            
+            // Clear form
+            document.getElementById('postContent').value = '';
+            attachedFiles = [];
+            updateAttachedFiles();
+            
+            // Reload posts
+            loadPosts();
+        }
+
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            const container = document.getElementById('postsContainer');
+            
+            if (posts.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No posts yet. Be the first to share something!</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            posts.forEach(post => {
+                const postEl = createPostElement(post);
+                container.appendChild(postEl);
+            });
+        }
+
+        function createPostElement(post) {
+            const postEl = document.createElement('div');
+            postEl.className = 'post';
+            
+            // Format timestamp
+            const date = new Date(post.timestamp);
+            const timeAgo = getTimeAgo(date);
+            
+            // Check if current user liked this post
+            const isLiked = currentUser && post.likes.includes(currentUser.username);
+            
+            // Create attachments HTML
+            let attachmentsHtml = '';
+            if (post.attachments && post.attachments.length > 0) {
+                attachmentsHtml = '<div class="post-attachments">';
+                post.attachments.forEach(attachment => {
+                    if (attachment.type === 'image') {
+                        attachmentsHtml += `
+                            <div class="post-attachment">
+                                <img src="${attachment.data}" alt="${attachment.name}">
+                            </div>
+                        `;
+                    } else if (attachment.type === 'video') {
+                        attachmentsHtml += `
+                            <div class="post-attachment">
+                                <video controls>
+                                    <source src="${attachment.data}">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        `;
+                    } else if (attachment.type === 'audio') {
+                        attachmentsHtml += `
+                            <div class="post-attachment">
+                                <audio controls>
+                                    <source src="${attachment.data}">
+                                    Your browser does not support the audio tag.
+                                </audio>
+                            </div>
+                        `;
+                    }
+                });
+                attachmentsHtml += '</div>';
+            }
+            
+            // Create comments HTML
+            let commentsHtml = '';
+            if (post.comments && post.comments.length > 0) {
+                commentsHtml = '<div class="comments-section">';
+                commentsHtml += '<h4>Comments</h4>';
+                post.comments.forEach(comment => {
+                    const commentDate = new Date(comment.timestamp);
+                    const commentTimeAgo = getTimeAgo(commentDate);
+                    commentsHtml += `
+                        <div class="comment">
+                            <div class="comment-avatar">${comment.author.charAt(0).toUpperCase()}</div>
+                            <div class="comment-content">
+                                <div class="comment-author">${comment.author}</div>
+                                <div class="comment-text">${comment.text}</div>
+                                <div class="comment-time">${commentTimeAgo}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                commentsHtml += '</div>';
+            }
+            
+            postEl.innerHTML = `
+                <div class="post-header">
+                    <div class="post-avatar">${post.author.charAt(0).toUpperCase()}</div>
+                    <div>
+                        <div class="post-author">${post.author}</div>
+                        <div class="post-time">${timeAgo}</div>
+                    </div>
+                </div>
+                <div class="post-content">${post.content}</div>
+                ${attachmentsHtml}
+                <div class="post-stats">
+                    <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                        <i class="fas fa-heart"></i> ${post.likes.length} ${post.likes.length === 1 ? 'Like' : 'Likes'}
+                    </button>
+                    <span>${post.comments.length} ${post.comments.length === 1 ? 'Comment' : 'Comments'}</span>
+                </div>
+                <div class="comments-section">
+                    <div class="comment-form">
+                        <input type="text" class="comment-input" placeholder="Write a comment..." id="comment-input-${post.id}">
+                        <button class="btn" onclick="addComment(${post.id})">Post</button>
+                    </div>
+                    ${commentsHtml}
+                </div>
+            `;
+            
+            return postEl;
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            
+            return "Just now";
+        }
+
+        function toggleLike(postId) {
+            if (!currentUser) {
+                alert('Please login to like posts.');
+                showLoginDialog();
+                return;
+            }
+            
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            const postIndex = posts.findIndex(p => p.id === postId);
+            
+            if (postIndex !== -1) {
+                const post = posts[postIndex];
+                const likeIndex = post.likes.indexOf(currentUser.username);
+                
+                if (likeIndex === -1) {
+                    // Add like
+                    post.likes.push(currentUser.username);
+                } else {
+                    // Remove like
+                    post.likes.splice(likeIndex, 1);
+                }
+                
+                // Save and reload
+                localStorage.setItem('posts', JSON.stringify(posts));
+                loadPosts();
+            }
+        }
+
+        function addComment(postId) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+            
+            if (!text) return;
+            
+            if (!currentUser) {
+                alert('Please login to comment.');
+                showLoginDialog();
+                return;
+            }
+            
+            const posts = JSON.parse(localStorage.getItem('posts')) || [];
+            const postIndex = posts.findIndex(p => p.id === postId);
+            
+            if (postIndex !== -1) {
+                const post = posts[postIndex];
+                const comment = {
+                    author: currentUser.fullName,
+                    text: text,
+                    timestamp: new Date().toISOString()
+                };
+                
+                post.comments.push(comment);
+                
+                // Save and reload
+                localStorage.setItem('posts', JSON.stringify(posts));
+                loadPosts();
+            }
+        }
+
+        // Quiz Functionality
+        function showQuizCreationDialog() {
+            if (!currentUser) {
+                alert('Please login to create a quiz.');
+                showLoginDialog();
+                return;
+            }
+            
+            quizQuestions = [];
+            renderQuizQuestions();
+            document.getElementById('quizCreationDialog').showModal();
+        }
+
+        function closeQuizCreationDialog() {
+            document.getElementById('quizCreationDialog').close();
+            document.getElementById('quizCreationForm').reset();
+            quizQuestions = [];
+        }
+
+        function addQuizQuestion() {
+            const question = {
+                id: Date.now(),
+                text: '',
+                answers: [
+                    { text: '', correct: false },
+                    { text: '', correct: false }
+                ]
+            };
+            
+            quizQuestions.push(question);
+            renderQuizQuestions();
+        }
+
+        function removeQuizQuestion(questionId) {
+            quizQuestions = quizQuestions.filter(q => q.id !== questionId);
+            renderQuizQuestions();
+        }
+
+        function updateQuizQuestion(questionId, field, value) {
+            const question = quizQuestions.find(q => q.id === questionId);
+            if (question) {
+                question[field] = value;
+            }
+        }
+
+        function updateQuizAnswer(questionId, answerIndex, field, value) {
+            const question = quizQuestions.find(q => q.id === questionId);
+            if (question && question.answers[answerIndex]) {
+                question.answers[answerIndex][field] = value;
+            }
+        }
+
+        function addQuizAnswer(questionId) {
+            const question = quizQuestions.find(q => q.id === questionId);
+            if (question) {
+                question.answers.push({ text: '', correct: false });
+                renderQuizQuestions();
+            }
+        }
+
+        function removeQuizAnswer(questionId, answerIndex) {
+            const question = quizQuestions.find(q => q.id === questionId);
+            if (question && question.answers.length > 2) {
+                question.answers.splice(answerIndex, 1);
+                renderQuizQuestions();
+            }
+        }
+
+        function renderQuizQuestions() {
+            const container = document.getElementById('quizQuestionsContainer');
+            container.innerHTML = '';
+            
+            if (quizQuestions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No questions added yet. Click "Add Question" to get started.</p>';
+                return;
+            }
+            
+            quizQuestions.forEach((question, questionIndex) => {
+                const questionEl = document.createElement('div');
+                questionEl.className = 'quiz-question-item';
+                
+                let answersHtml = '';
+                question.answers.forEach((answer, answerIndex) => {
+                    answersHtml += `
+                        <div class="quiz-answer-item">
+                            <input type="text" class="quiz-answer-text" placeholder="Answer ${answerIndex + 1}" 
+                                   value="${answer.text}" 
+                                   onchange="updateQuizAnswer(${question.id}, ${answerIndex}, 'text', this.value)">
+                            <label>
+                                <input type="radio" name="correct-${question.id}" 
+                                       ${answer.correct ? 'checked' : ''} 
+                                       onchange="updateQuizAnswer(${question.id}, ${answerIndex}, 'correct', true)">
+                                Correct
+                            </label>
+                            <button class="remove-question-btn" onclick="removeQuizAnswer(${question.id}, ${answerIndex})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                questionEl.innerHTML = `
+                    <div class="quiz-question-header">
+                        <div class="quiz-question-number">Question ${questionIndex + 1}</div>
+                        <button class="remove-question-btn" onclick="removeQuizQuestion(${question.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <input type="text" class="quiz-question-text" placeholder="Enter your question..." 
+                           value="${question.text}" 
+                           onchange="updateQuizQuestion(${question.id}, 'text', this.value)">
+                    <div class="quiz-answers-container">
+                        ${answersHtml}
+                    </div>
+                    <button class="add-answer-btn" onclick="addQuizAnswer(${question.id})">
+                        <i class="fas fa-plus"></i> Add Answer
+                    </button>
+                `;
+                
+                container.appendChild(questionEl);
+            });
+        }
+
+        document.getElementById('quizCreationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (quizQuestions.length === 0) {
+                alert('Please add at least one question to create a quiz.');
+                return;
+            }
+            
+            // Validate questions
+            for (const question of quizQuestions) {
+                if (!question.text.trim()) {
+                    alert('Please fill in all question texts.');
+                    return;
+                }
+                
+                let hasCorrectAnswer = false;
+                for (const answer of question.answers) {
+                    if (!answer.text.trim()) {
+                        alert('Please fill in all answer texts.');
+                        return;
+                    }
+                    if (answer.correct) {
+                        hasCorrectAnswer = true;
+                    }
+                }
+                
+                if (!hasCorrectAnswer) {
+                    alert('Please mark at least one answer as correct for each question.');
+                    return;
+                }
+            }
+            
+            const quiz = {
+                id: Date.now(),
+                title: document.getElementById('quizTitle').value,
+                subject: document.getElementById('quizSubject').value,
+                difficulty: document.getElementById('quizDifficulty').value,
+                description: document.getElementById('quizDescription').value,
+                author: currentUser.fullName,
+                username: currentUser.username,
+                questions: quizQuestions,
+                attempts: [],
+                likes: [],
+                createdAt: new Date().toISOString()
+            };
+            
+            // Save quiz
+            const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+            quizzes.push(quiz);
+            localStorage.setItem('quizzes', JSON.stringify(quizzes));
+            
+            // Close dialog and reload
+            closeQuizCreationDialog();
+            loadQuizzes();
+        });
+
+        function loadQuizzes() {
+            const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+            const container = document.getElementById('quizGrid');
+            
+            if (quizzes.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No quizzes yet. Create your first quiz!</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            quizzes.forEach(quiz => {
+                const quizEl = createQuizElement(quiz);
+                container.appendChild(quizEl);
+            });
+        }
+
+        function createQuizElement(quiz) {
+            const quizEl = document.createElement('div');
+            quizEl.className = 'quiz-card';
+            
+            // Calculate average score
+            let averageScore = 0;
+            if (quiz.attempts && quiz.attempts.length > 0) {
+                const totalScore = quiz.attempts.reduce((sum, attempt) => sum + attempt.score, 0);
+                averageScore = Math.round(totalScore / quiz.attempts.length);
+            }
+            
+            // Check if current user liked this quiz
+            const isLiked = currentUser && quiz.likes.includes(currentUser.username);
+            
+            quizEl.innerHTML = `
+                <div class="quiz-card-header">
+                    <div>
+                        <div class="quiz-title">${quiz.title}</div>
+                        <div class="quiz-author">by ${quiz.author}</div>
+                    </div>
+                    <span class="quiz-badge">${quiz.difficulty}</span>
+                </div>
+                <div class="quiz-description">${quiz.description || 'No description'}</div>
+                <div class="quiz-stats">
+                    <div class="quiz-stat">
+                        <i class="fas fa-question-circle"></i> ${quiz.questions.length} questions
+                    </div>
+                    <div class="quiz-stat">
+                        <i class="fas fa-users"></i> ${quiz.attempts ? quiz.attempts.length : 0} attempts
+                    </div>
+                    <div class="quiz-stat">
+                        <i class="fas fa-percentage"></i> ${averageScore}% avg
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" onclick="startQuiz(${quiz.id})">
+                        <i class="fas fa-play"></i> Start Quiz
+                    </button>
+                    <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleQuizLike(${quiz.id})">
+                        <i class="fas fa-heart"></i> ${quiz.likes ? quiz.likes.length : 0}
+                    </button>
+                </div>
+            `;
+            
+            return quizEl;
+        }
+
+        function startQuiz(quizId) {
+            const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+            currentQuiz = quizzes.find(q => q.id === quizId);
+            
+            if (!currentQuiz) return;
+            
+            currentQuestionIndex = 0;
+            userAnswers = new Array(currentQuiz.questions.length).fill(null);
+            
+            document.getElementById('quizTakingTitle').textContent = currentQuiz.title;
+            showQuizTakingDialog();
+            showQuestion();
+        }
+
+        function toggleQuizLike(quizId) {
+            if (!currentUser) {
+                alert('Please login to like quizzes.');
+                showLoginDialog();
+                return;
+            }
+            
+            const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+            const quizIndex = quizzes.findIndex(q => q.id === quizId);
+            
+            if (quizIndex !== -1) {
+                const quiz = quizzes[quizIndex];
+                if (!quiz.likes) quiz.likes = [];
+                
+                const likeIndex = quiz.likes.indexOf(currentUser.username);
+                
+                if (likeIndex === -1) {
+                    // Add like
+                    quiz.likes.push(currentUser.username);
+                } else {
+                    // Remove like
+                    quiz.likes.splice(likeIndex, 1);
+                }
+                
+                // Save and reload
+                localStorage.setItem('quizzes', JSON.stringify(quizzes));
+                loadQuizzes();
+            }
+        }
+
+        function searchQuizzes() {
+            const searchTerm = document.getElementById('quizSearchInput').value.toLowerCase();
+            const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+            
+            const filteredQuizzes = quizzes.filter(quiz => 
+                quiz.title.toLowerCase().includes(searchTerm) ||
+                quiz.description.toLowerCase().includes(searchTerm) ||
+                quiz.author.toLowerCase().includes(searchTerm)
+            );
+            
+            const container = document.getElementById('quizGrid');
+            container.innerHTML = '';
+            
+            if (filteredQuizzes.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No quizzes found matching your search.</p>';
+                return;
+            }
+            
+            filteredQuizzes.forEach(quiz => {
+                const quizEl = createQuizElement(quiz);
+                container.appendChild(quizEl);
+            });
+        }
+
+        function filterQuizzes() {
+            const subjectFilter = document.getElementById('quizSubjectFilter').value;
+            const difficultyFilter = document.getElementById('quizDifficultyFilter').value;
+            const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+            
+            const filteredQuizzes = quizzes.filter(quiz => {
+                const subjectMatch = !subjectFilter || quiz.subject === subjectFilter;
+                const difficultyMatch = !difficultyFilter || quiz.difficulty === difficultyFilter;
+                return subjectMatch && difficultyMatch;
+            });
+            
+            const container = document.getElementById('quizGrid');
+            container.innerHTML = '';
+            
+            if (filteredQuizzes.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--dark-gray);">No quizzes found matching your filters.</p>';
+                return;
+            }
+            
+            filteredQuizzes.forEach(quiz => {
+                const quizEl = createQuizElement(quiz);
+                container.appendChild(quizEl);
+            });
+        }
+
+        // Quiz Taking Dialog
+        function showQuizTakingDialog() {
+            document.getElementById('quizTakingDialog').showModal();
+        }
+
+        function closeQuizTakingDialog() {
+            document.getElementById('quizTakingDialog').close();
+        }
+
+        function showQuestion() {
+            if (!currentQuiz || currentQuestionIndex >= currentQuiz.questions.length) {
+                showQuizResults();
+                return;
+            }
+            
+            const question = currentQuiz.questions[currentQuestionIndex];
+            const container = document.getElementById('quizQuestionContainer');
+            
+            // Update progress
+            const progress = ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+            document.getElementById('quizProgressBar').style.width = progress + '%';
+            
+            // Update counter
+            document.getElementById('questionCounter').textContent = 
+                `Question ${currentQuestionIndex + 1} of ${currentQuiz.questions.length}`;
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').style.display = currentQuestionIndex === 0 ? 'none' : 'block';
+            document.getElementById('nextBtn').textContent = 
+                currentQuestionIndex === currentQuiz.questions.length - 1 ? 'Submit' : 'Next';
+            
+            // Render question
+            container.innerHTML = `
+                <div class="quiz-question">
+                    <div class="quiz-question-text">${question.text}</div>
+                    <div class="quiz-answers">
+                        ${question.answers.map((answer, index) => `
+                            <div class="quiz-answer ${userAnswers[currentQuestionIndex] === index ? 'selected' : ''}" 
+                                 onclick="selectAnswer(${index})">
+                                <input type="${question.multipleCorrect ? 'checkbox' : 'radio'}" name="quiz-answer" 
+                                       ${userAnswers[currentQuestionIndex] === index ? 'checked' : ''}>
+                                <span>${answer.text}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectAnswer(answerIndex) {
+            userAnswers[currentQuestionIndex] = answerIndex;
+            showQuestion();
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < currentQuiz.questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            if (!currentQuiz) return;
+            
+            // Calculate score
+            let correctCount = 0;
+            const reviews = [];
+            
+            currentQuiz.questions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer !== null && question.answers[userAnswer]?.correct;
+                
+                if (isCorrect) correctCount++;
+                
+                reviews.push({
+                    question: question.text,
+                    userAnswer: userAnswer !== null ? question.answers[userAnswer].text : 'Not answered',
+                    correctAnswer: question.answers.filter(a => a.correct).map(a => a.text).join(', '),
+                    isCorrect
+                });
+            });
+            
+            const score = Math.round((correctCount / currentQuiz.questions.length) * 100);
+            
+            // Save attempt
+            const attempt = {
+                username: currentUser ? currentUser.username : 'Anonymous',
+                score: score,
+                timestamp: new Date().toISOString()
+            };
+            
+            if (!currentQuiz.attempts) currentQuiz.attempts = [];
+            currentQuiz.attempts.push(attempt);
+            
+            // Save updated quiz
+            const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+            const quizIndex = quizzes.findIndex(q => q.id === currentQuiz.id);
+            if (quizIndex !== -1) {
+                quizzes[quizIndex] = currentQuiz;
+                localStorage.setItem('quizzes', JSON.stringify(quizzes));
+            }
+            
+            // Show results
+            const container = document.getElementById('quizQuestionContainer');
+            container.innerHTML = `
+                <div class="quiz-results">
+                    <div class="quiz-score">${score}%</div>
+                    <div class="quiz-message">
+                        ${score >= 80 ? 'Excellent work!' : 
+                          score >= 60 ? 'Good job!' : 
+                          score >= 40 ? 'Keep practicing!' : 'Keep learning!'}
+                    </div>
+                    <p>You got ${correctCount} out of ${currentQuiz.questions.length} questions correct.</p>
+                    <div class="quiz-review">
+                        <h3>Review Your Answers</h3>
+                        ${reviews.map(review => `
+                            <div class="quiz-review-item ${review.isCorrect ? 'correct' : 'incorrect'}">
+                                <strong>Q:</strong> ${review.question}<br>
+                                <strong>Your answer:</strong> ${review.userAnswer}<br>
+                                <strong>Correct answer:</strong> ${review.correctAnswer}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="btn" onclick="closeQuizTakingDialog()">Close</button>
+                </div>
+            `;
+        }
+
+        // Work Manager functionality
+        const workForm = document.getElementById('workForm');
+        const workList = document.getElementById('workList');
+        let workItems = JSON.parse(localStorage.getItem('workItems')) || [];
+
+        workForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const workItem = {
+                id: Date.now(),
+                title: document.getElementById('workTitle').value,
+                subject: document.getElementById('workSubject').value,
+                type: document.getElementById('workType').value,
+                deadline: document.getElementById('workDeadline').value,
+                questionNumber: document.getElementById('questionNumber').value,
+                priority: document.getElementById('workPriority').value,
+                description: document.getElementById('workDescription').value,
+                completed: false
+            };
+            
+            workItems.push(workItem);
+            saveWorkItems();
+            renderWorkItems();
+            workForm.reset();
+        });
+
+        function saveWorkItems() {
+            localStorage.setItem('workItems', JSON.stringify(workItems));
+        }
+
+        function renderWorkItems() {
+            workList.innerHTML = '';
+            
+            // Sort by deadline
+            workItems.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+            
+            workItems.forEach(item => {
+                const workItemEl = document.createElement('div');
+                workItemEl.className = 'work-item';
+                
+                // Calculate days until deadline
+                const today = new Date();
+                const deadline = new Date(item.deadline);
+                const daysUntil = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+                let deadlineText = '';
+                let deadlineClass = '';
+                
+                if (daysUntil < 0) {
+                    deadlineText = `${Math.abs(daysUntil)} days overdue`;
+                    deadlineClass = 'style="background-color: #f44336;"';
+                } else if (daysUntil === 0) {
+                    deadlineText = 'Due today';
+                    deadlineClass = 'style="background-color: #ff9800;"';
+                } else if (daysUntil === 1) {
+                    deadlineText = 'Due tomorrow';
+                    deadlineClass = 'style="background-color: #ff9800;"';
+                } else if (daysUntil <= 7) {
+                    deadlineText = `${daysUntil} days`;
+                    deadlineClass = 'style="background-color: #ff9800;"';
+                } else {
+                    deadlineText = `${daysUntil} days`;
+                    deadlineClass = '';
+                }
+                
+                workItemEl.innerHTML = `
+                    <div class="work-item-content">
+                        <div class="work-item-title">${item.title}</div>
+                        <div class="work-item-details">
+                            ${item.subject} | ${item.type} 
+                            ${item.questionNumber ? `| Questions: ${item.questionNumber}` : ''}
+                            ${item.description ? `| ${item.description}` : ''}
+                        </div>
+                    </div>
+                    <div class="work-item-deadline" ${deadlineClass}>${deadlineText}</div>
+                    <button class="delete-btn" onclick="deleteWorkItem(${item.id})">Delete</button>
+                `;
+                
+                workList.appendChild(workItemEl);
+            });
+            
+            if (workItems.length === 0) {
+                workList.innerHTML = '<p>No work items yet. Add your first assignment above!</p>';
+            }
+        }
+
+        function deleteWorkItem(id) {
+            workItems = workItems.filter(item => item.id !== id);
+            saveWorkItems();
+            renderWorkItems();
+        }
+
+        // Grade Planner functionality
+        const gradeForm = document.getElementById('gradeForm');
+        const gradesList = document.getElementById('gradesList');
+        let grades = JSON.parse(localStorage.getItem('grades')) || [];
+        let gradeChart = null;
+
+        gradeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const grade = {
+                id: Date.now(),
+                subject: document.getElementById('gradeSubject').value,
+                score: parseFloat(document.getElementById('gradeScore').value),
+                term: document.getElementById('gradeTerm').value,
+                year: parseInt(document.getElementById('gradeYear').value)
+            };
+            
+            grades.push(grade);
+            saveGrades();
+            renderGrades();
+            updateGradeChart();
+            gradeForm.reset();
+        });
+
+        function saveGrades() {
+            localStorage.setItem('grades', JSON.stringify(grades));
+        }
+
+        function renderGrades() {
+            gradesList.innerHTML = '';
+            
+            // Group grades by subject
+            const gradesBySubject = {};
+            grades.forEach(grade => {
+                if (!gradesBySubject[grade.subject]) {
+                    gradesBySubject[grade.subject] = [];
+                }
+                gradesBySubject[grade.subject].push(grade);
+            });
+            
+            // Calculate average for each subject
+            for (const subject in gradesBySubject) {
+                const subjectGrades = gradesBySubject[subject];
+                const average = subjectGrades.reduce((sum, grade) => sum + grade.score, 0) / subjectGrades.length;
+                
+                const gradeItem = document.createElement('div');
+                gradeItem.className = 'grade-item';
+                gradeItem.innerHTML = `
+                    <div class="grade-item-subject">${subject}</div>
+                    <div class="grade-item-score">${average.toFixed(1)}%</div>
+                `;
+                
+                gradesList.appendChild(gradeItem);
+            }
+            
+            if (Object.keys(gradesBySubject).length === 0) {
+                gradesList.innerHTML = '<p>No grades added yet. Add your first grade above!</p>';
+            }
+        }
+
+        function updateGradeChart() {
+            const ctx = document.getElementById('gradeChart').getContext('2d');
+            
+            // Group grades by subject
+            const gradesBySubject = {};
+            grades.forEach(grade => {
+                if (!gradesBySubject[grade.subject]) {
+                    gradesBySubject[grade.subject] = [];
+                }
+                gradesBySubject[grade.subject].push(grade);
+            });
+            
+            // Prepare data for chart
+            const labels = Object.keys(gradesBySubject);
+            const data = labels.map(subject => {
+                const subjectGrades = gradesBySubject[subject];
+                return subjectGrades.reduce((sum, grade) => sum + grade.score, 0) / subjectGrades.length;
+            });
+            
+            // Destroy existing chart if it exists
+            if (gradeChart) {
+                gradeChart.destroy();
+            }
+            
+            // Create new chart
+            gradeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Average Grade (%)',
+                        data: data,
+                        backgroundColor: 'rgba(76, 175, 80, 0.6)',
+                        borderColor: 'rgba(46, 125, 50, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    },
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Learning Tracker functionality
+        const learningForm = document.getElementById('learningForm');
+        const learningList = document.getElementById('learningList');
+        let learningItems = JSON.parse(localStorage.getItem('learningItems')) || [];
+
+        learningForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const learningItem = {
+                id: Date.now(),
+                subject: document.getElementById('learningSubject').value,
+                topic: document.getElementById('learningTopic').value,
+                difficulty: document.getElementById('learningDifficulty').value,
+                date: new Date().toLocaleDateString()
+            };
+            
+            learningItems.push(learningItem);
+            saveLearningItems();
+            renderLearningItems();
+            learningForm.reset();
+        });
+
+        function saveLearningItems() {
+            localStorage.setItem('learningItems', JSON.stringify(learningItems));
+        }
+
+        function renderLearningItems() {
+            learningList.innerHTML = '';
+            
+            // Sort by date (newest first)
+            learningItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            learningItems.forEach(item => {
+                const learningItemEl = document.createElement('div');
+                learningItemEl.className = 'learning-item';
+                
+                learningItemEl.innerHTML = `
+                    <div class="learning-item-header">
+                        <div class="learning-item-title">${item.topic}</div>
+                        <span class="difficulty-badge difficulty-${item.difficulty}">${item.difficulty}</span>
+                    </div>
+                    <div>${item.subject} - ${item.date}</div>
+                `;
+                
+                learningList.appendChild(learningItemEl);
+            });
+            
+            if (learningItems.length === 0) {
+                learningList.innerHTML = '<p>No learning items yet. Add your first learning item above!</p>';
+            }
+        }
+
+        // Navigation functionality
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.content-section');
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const targetSection = item.getAttribute('data-section');
+                
+                // Update active nav item
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Show target section
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === targetSection) {
+                        section.classList.add('active');
+                    }
+                });
+                
+                // Close sidebar on mobile
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Calculator functionality
+        let calcDisplay = document.getElementById('calcDisplay');
+        let calcValue = '0';
+        let shouldResetDisplay = false;
+
+        function updateCalcDisplay() {
+            calcDisplay.textContent = calcValue;
+        }
+
+        function clearCalc() {
+            calcValue = '0';
+            updateCalcDisplay();
+        }
+
+        function appendToCalc(value) {
+            if (shouldResetDisplay) {
+                calcValue = '';
+                shouldResetDisplay = false;
+            }
+            
+            if (calcValue === '0' && value !== '.') {
+                calcValue = value;
+            } else {
+                calcValue += value;
+            }
+            
+            updateCalcDisplay();
+        }
+
+        function deleteLastCalc() {
+            if (calcValue.length > 1) {
+                calcValue = calcValue.slice(0, -1);
+            } else {
+                calcValue = '0';
+            }
+            updateCalcDisplay();
+        }
+
+        function calculateResult() {
+            try {
+                calcValue = String(eval(calcValue));
+                shouldResetDisplay = true;
+                updateCalcDisplay();
+            } catch (error) {
+                calcValue = 'Error';
+                shouldResetDisplay = true;
+                updateCalcDisplay();
+            }
+        }
+
+        // Converter functionality
+        const conversionTypes = {
+            length: {
+                units: ['meter', 'kilometer', 'centimeter', 'millimeter', 'mile', 'yard', 'foot', 'inch'],
+                conversions: {
+                    'meter': 1,
+                    'kilometer': 0.001,
+                    'centimeter': 100,
+                    'millimeter': 1000,
+                    'mile': 0.000621371,
+                    'yard': 1.09361,
+                    'foot': 3.28084,
+                    'inch': 39.3701
+                }
+            },
+            weight: {
+                units: ['kilogram', 'gram', 'milligram', 'pound', 'ounce', 'ton'],
+                conversions: {
+                    'kilogram': 1,
+                    'gram': 1000,
+                    'milligram': 1000000,
+                    'pound': 2.20462,
+                    'ounce': 35.274,
+                    'ton': 0.001
+                }
+            },
+            temperature: {
+                units: ['celsius', 'fahrenheit', 'kelvin'],
+                conversions: {
+                    'celsius': (val) => val,
+                    'fahrenheit': (val) => (val * 9/5) + 32,
+                    'kelvin': (val) => val + 273.15
+                }
+            },
+            volume: {
+                units: ['liter', 'milliliter', 'gallon', 'quart', 'pint', 'cup', 'fluid ounce'],
+                conversions: {
+                    'liter': 1,
+                    'milliliter': 1000,
+                    'gallon': 0.264172,
+                    'quart': 1.05669,
+                    'pint': 2.11338,
+                    'cup': 4.22675,
+                    'fluid ounce': 33.814
+                }
+            }
+        };
+
+        function updateConverterOptions() {
+            const type = document.getElementById('conversionType').value;
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+            
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+            
+            conversionTypes[type].units.forEach(unit => {
+                fromUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
+                toUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
+            });
+            
+            // Set different default values for toUnit
+            if (toUnit.options.length > 1) {
+                toUnit.selectedIndex = 1;
+            }
+        }
+
+        function convert() {
+            const type = document.getElementById('conversionType').value;
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            const fromValue = parseFloat(document.getElementById('fromValue').value);
+            const toValue = document.getElementById('toValue');
+            
+            if (isNaN(fromValue)) {
+                toValue.value = 'Invalid input';
+                return;
+            }
+            
+            if (type === 'temperature') {
+                // First convert to celsius
+                let celsiusValue;
+                if (fromUnit === 'fahrenheit') {
+                    celsiusValue = (fromValue - 32) * 5/9;
+                } else if (fromUnit === 'kelvin') {
+                    celsiusValue = fromValue - 273.15;
+                } else {
+                    celsiusValue = fromValue;
+                }
+                
+                // Then convert from celsius to target unit
+                let result;
+                if (toUnit === 'fahrenheit') {
+                    result = (celsiusValue * 9/5) + 32;
+                } else if (toUnit === 'kelvin') {
+                    result = celsiusValue + 273.15;
+                } else {
+                    result = celsiusValue;
+                }
+                
+                toValue.value = result.toFixed(2);
+            } else {
+                // For other types, use the conversion factors
+                const fromFactor = conversionTypes[type].conversions[fromUnit];
+                const toFactor = conversionTypes[type].conversions[toUnit];
+                
+                // Convert to base unit first, then to target unit
+                const baseValue = fromValue / fromFactor;
+                const result = baseValue * toFactor;
+                
+                toValue.value = result.toFixed(4);
+            }
+        }
+
+        // Initialize
+        updateCalcDisplay();
+        updateConverterOptions();
+        renderWorkItems();
+        renderGrades();
+        updateGradeChart();
+        renderLearningItems();
+
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Epsilon SW registered!'))
+                    .catch(err => console.log('SW registration failed: ', err));
+            });
+        }
+                // Initialize Lucide Icons
+        
+    </script>
+</body>
+</html>
